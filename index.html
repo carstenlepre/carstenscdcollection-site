@@ -1,73 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Carsten's CD Collection Radio</title>
-<!-- Google Fonts import -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
-<style>
-  /* Reset and base styles */
-  html, body {
-    height: 100%;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #4a90e2, #d57ba3);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  h1 {
-    font-weight: 700;
-    font-size: 3rem;
-    margin-bottom: 0.5em;
-    text-shadow: 0 3px 6px rgba(0,0,0,0.3);
-  }
-  p {
-    font-weight: 400;
-    font-size: 1.3rem;
-    margin-top: 0;
-    margin-bottom: 2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.25);
-  }
-  audio {
-    border-radius: 12px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    width: 320px;
-    max-width: 90vw;
-    outline: none;
-  }
-  .phone {
-    margin-top: 3rem;
-    font-size: 1.4rem;
-    font-weight: 600;
-    background: rgba(255 255 255 / 0.2);
-    padding: 1em 2em;
-    border-radius: 30px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-    user-select: none;
-  }
-  .phone a {
-    color: white;
-    text-decoration: none;
-  }
-  .phone a:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Carsten’s CD Collection Radio</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #5b8cff, #f4b1ff);
+      color: #fff;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      padding: 2rem 1rem;
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin: 0;
+    }
+    h2 {
+      font-weight: 400;
+      margin-top: 0.5rem;
+      font-size: 1.2rem;
+    }
+    audio {
+      margin: 2rem auto;
+      width: 300px;
+    }
+    .call {
+      margin: 2rem auto;
+      font-size: 1.1rem;
+    }
+    footer {
+      margin-top: auto;
+      padding: 1rem;
+      font-size: 0.9rem;
+      background: rgba(0, 0, 0, 0.1);
+    }
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-  <h1>Carsten's CD Collection Radio</h1>
-  <p>Call to chat or request your favorite song!</p>
+  <header>
+    <h1>🎶 Carsten’s CD Collection Radio</h1>
+    <h2>Streaming hand-picked tracks from a vast CD library – live commentary included</h2>
+  </header>
+
   <audio controls autoplay>
-    <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg" />
+    <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-  <div class="phone">
-    📞 <a href="tel:+19086050391">908-605-0391</a>
+
+  <div class="call">
+    📞 Want to request a song or just chat? Call or text: <strong>(908) 605-0391</strong>
   </div>
+
+  <footer>
+    📻 Proudly <a href="http://www.internet-radio.com" target="_blank">listed on Internet-Radio.com</a>
+  </footer>
 </body>
 </html>

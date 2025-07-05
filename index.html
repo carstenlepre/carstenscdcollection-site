@@ -6,6 +6,7 @@
 <title>Carsten's CD Collection Radio</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
@@ -17,23 +18,21 @@
     flex-direction: column;
     justify-content: center;
     padding: 2rem;
-    /* Removed overflow: hidden; so scrolling works */
     overflow: auto;
     position: relative;
   }
 
-  /* Animated gradient background */
   body::before {
     content: '';
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     background: linear-gradient(270deg,
-      rgba(73,105,114,1) 0%,        /* teal */
-      rgba(95,123,132,1) 15%,       /* lighter teal */
-      rgba(132,102,152,1) 40%,      /* purple */
-      rgba(180,126,166,1) 60%,      /* pinkish purple */
-      rgba(95,123,132,1) 85%,       /* lighter teal again */
-      rgba(73,105,114,1) 100%);     /* teal */
+      rgba(73,105,114,1) 0%,
+      rgba(95,123,132,1) 15%,
+      rgba(132,102,152,1) 40%,
+      rgba(180,126,166,1) 60%,
+      rgba(95,123,132,1) 85%,
+      rgba(73,105,114,1) 100%);
     background-size: 1500% 1500%;
     animation: gradientShift 15s ease infinite;
     z-index: -2;
@@ -46,7 +45,6 @@
     100% {background-position: 0% 50%;}
   }
 
-  /* Overlay subtle noise or pattern */
   body::after {
     content: '';
     position: fixed;
@@ -68,10 +66,7 @@
   h1 {
     font-size: 3.4rem;
     margin: 0.2em 0 0.5em 0;
-    text-shadow:
-      3px 3px 5px rgba(0,0,0,0.7),
-      0 0 15px #4a6a72,
-      0 0 30px #6b8b93;
+    text-shadow: 3px 3px 5px rgba(0,0,0,0.7), 0 0 15px #4a6a72, 0 0 30px #6b8b93;
     letter-spacing: 1.2px;
     font-weight: 700;
     text-transform: uppercase;
@@ -95,9 +90,7 @@
     width: 90%;
     max-width: 400px;
     border-radius: 14px;
-    box-shadow:
-      0 8px 24px rgba(0,0,0,0.7),
-      inset 0 0 15px rgba(73,105,114,0.6);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.7), inset 0 0 15px rgba(73,105,114,0.6);
     outline: none;
   }
 
@@ -116,15 +109,10 @@
     animation: bounce 1.2s ease-in-out infinite;
     border-radius: 3px;
   }
-  .bar:nth-child(1) { animation-delay: 0s; }
-  .bar:nth-child(2) { animation-delay: 0.15s; }
-  .bar:nth-child(3) { animation-delay: 0.3s; }
-  .bar:nth-child(4) { animation-delay: 0.45s; }
-  .bar:nth-child(5) { animation-delay: 0.6s; }
-  .bar:nth-child(6) { animation-delay: 0.75s; }
-  .bar:nth-child(7) { animation-delay: 0.9s; }
-  .bar:nth-child(8) { animation-delay: 1.05s; }
-  .bar:nth-child(9) { animation-delay: 1.2s; }
+
+  .bar:nth-child(n) {
+    animation-delay: calc(0.15s * var(--n));
+  }
 
   @keyframes bounce {
     0%, 100% { height: 10px; }
@@ -139,9 +127,7 @@
     margin-bottom: 1.2em;
     min-height: 5em;
     color: #e0f7fa;
-    text-shadow:
-      2px 2px 8px #3a5a63,
-      0 0 10px #55a5b1;
+    text-shadow: 2px 2px 8px #3a5a63, 0 0 10px #55a5b1;
     user-select: none;
     position: relative;
   }
@@ -188,14 +174,11 @@
   #phone {
     font-size: 1.3rem;
     margin-top: auto;
-    padding: 1em 0;
+    padding: 1em 0 0.3em 0;
     color: #cce7e9;
-    text-shadow:
-      1.5px 1.5px 3px #204040,
-      0 0 15px #4a6a72;
+    text-shadow: 1.5px 1.5px 3px #204040, 0 0 15px #4a6a72;
     font-weight: 700;
     font-family: 'Poppins', sans-serif;
-    position: relative;
     user-select: none;
     cursor: pointer;
   }
@@ -205,8 +188,28 @@
   }
 
   @keyframes pulsePhone {
-    0% { text-shadow: 1.5px 1.5px 3px #204040, 0 0 15px #4a6a72;}
+    0% { text-shadow: 1.5px 1.5px 3px #204040, 0 0 15px #4a6a72; }
     100% { text-shadow: 2.5px 2.5px 7px #204040, 0 0 30px #6b8b93; }
+  }
+
+  #social-prompt {
+    font-size: 0.9rem;
+    color: #b9d5d8;
+    text-shadow: 1px 1px 2px #1a2e30;
+    font-weight: 400;
+    margin-top: 0.3em;
+  }
+
+  #social-prompt a {
+    color: #cbeeff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  #social-prompt a:hover {
+    color: #ffffff;
+    text-shadow: 0 0 8px #9feaff, 0 0 12px #4a6a72;
   }
 
   #about {
@@ -235,9 +238,15 @@
 </audio>
 
 <div id="waveform" aria-hidden="true">
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
-  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar" style="--n:1;"></div>
+  <div class="bar" style="--n:2;"></div>
+  <div class="bar" style="--n:3;"></div>
+  <div class="bar" style="--n:4;"></div>
+  <div class="bar" style="--n:5;"></div>
+  <div class="bar" style="--n:6;"></div>
+  <div class="bar" style="--n:7;"></div>
+  <div class="bar" style="--n:8;"></div>
+  <div class="bar" style="--n:9;"></div>
 </div>
 
 <div id="now-playing">Loading now playing...</div>
@@ -245,7 +254,14 @@
 <div id="recent-title">Recently Played</div>
 <ul id="recently-played"></ul>
 
-<div id="phone" title="Call or text (908) 605-0391">📞 Want to request a song or just chat? Call or text: (908) 605-0391</div>
+<div id="phone">
+  📞 Want to request a song or just chat? Call or text: (908) 605-0391
+  <div id="social-prompt">
+    or DM me on Instagram at
+    <a href="https://instagram.com/carstenscdradio" target="_blank">@carstenscdradio</a><br />
+    (send in your own songs too!)
+  </div>
+</div>
 
 <div id="about">
   My name is Carsten Lepre and I'm a 16 year old music lover and CD collector! Carsten's CD Collection brings you my absolute favorite cuts from my actual CD collection, from John Mayer to Coldplay, Beatles, Tame Impala, and more. Stick around for live commentary, album listen-throughs, and an all-around good time!
@@ -285,7 +301,6 @@
       if (title !== lastTrack && title !== 'No track info available') {
         lastTrack = title;
         nowPlayingElem.textContent = `Now Playing: ${title}`;
-
         const coverUrl = await fetchCoverArt(title);
         if (coverUrl) {
           let img = document.getElementById('cover-art');
@@ -296,11 +311,7 @@
           }
           img.src = coverUrl;
           img.style.opacity = '1';
-        } else {
-          const existingImg = document.getElementById('cover-art');
-          if (existingImg) existingImg.style.opacity = '0';
         }
-
         if (!recentTracks.includes(title)) {
           recentTracks.unshift(title);
           if (recentTracks.length > 5) recentTracks.pop();
@@ -309,7 +320,6 @@
       }
     } catch (e) {
       nowPlayingElem.textContent = 'Unable to load track info.';
-      console.error(e);
     }
   }
 

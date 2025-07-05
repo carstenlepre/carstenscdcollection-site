@@ -6,172 +6,219 @@
 <title>Carsten's CD Collection Radio</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(
-      270deg,
-      #4b6772,
-      #6e90b0,
-      #8c78b4,
-      #b495d9,
-      #8c78b4,
-      #6e90b0,
-      #4b6772
-    );
-    background-size: 1400% 1400%;
-    animation: gradientShift 40s ease infinite;
+    background: linear-gradient(135deg, rgb(73,105,114), #b07ea6);
     color: #eee;
     text-align: center;
-    padding: 2rem;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 2rem;
+    /* Removed overflow: hidden; so scrolling works */
+    overflow: auto;
+    position: relative;
   }
 
-  h1 {
-    font-size: 3rem;
-    margin: 0.25rem 0 1rem;
-    text-shadow: 0 4px 8px rgba(0,0,0,0.7);
+  /* Animated gradient background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(270deg,
+      rgba(73,105,114,1) 0%,        /* teal */
+      rgba(95,123,132,1) 15%,       /* lighter teal */
+      rgba(132,102,152,1) 40%,      /* purple */
+      rgba(180,126,166,1) 60%,      /* pinkish purple */
+      rgba(95,123,132,1) 85%,       /* lighter teal again */
+      rgba(73,105,114,1) 100%);     /* teal */
+    background-size: 1500% 1500%;
+    animation: gradientShift 15s ease infinite;
+    z-index: -2;
+    filter: brightness(0.8);
+  }
+
+  @keyframes gradientShift {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+  }
+
+  /* Overlay subtle noise or pattern */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px),
+                radial-gradient(circle at center, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-position: 0 0, 25px 25px;
+    background-size: 50px 50px;
+    z-index: -1;
   }
 
   #logo {
-    width: 220px;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
-    margin-bottom: 1rem;
+    max-width: 200px;
+    margin: 0 auto 1rem auto;
+    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.9));
   }
 
-  #description, #phone, #about {
-    max-width: 600px;
-    margin: 0.5rem auto 1.5rem;
-    font-size: 1.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  h1 {
+    font-size: 3.4rem;
+    margin: 0.2em 0 0.5em 0;
+    text-shadow:
+      3px 3px 5px rgba(0,0,0,0.7),
+      0 0 15px #4a6a72,
+      0 0 30px #6b8b93;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    text-transform: uppercase;
+    user-select: none;
+  }
+
+  #description {
+    font-size: 1.3rem;
+    margin-bottom: 2em;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 1.5px 1.5px 5px rgba(0,0,0,0.5);
+    font-style: italic;
+    user-select: none;
   }
 
   audio {
-    margin-bottom: 2rem;
+    display: block;
+    margin: 0 auto 2rem auto;
     width: 90%;
     max-width: 400px;
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    border-radius: 14px;
+    box-shadow:
+      0 8px 24px rgba(0,0,0,0.7),
+      inset 0 0 15px rgba(73,105,114,0.6);
     outline: none;
   }
 
-  #now-playing-label {
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 0.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  #waveform {
+    width: 90%;
+    max-width: 400px;
+    height: 50px;
+    margin: 0 auto 1.5em auto;
   }
 
-  @keyframes glowPulse {
-    0%, 100% {
-      text-shadow:
-        0 0 5px #8C78B4,
-        0 0 10px #8C78B4,
-        0 0 20px #8C78B4,
-        0 0 40px #6E90B0;
-      color: #E0D7FF;
-    }
-    50% {
-      text-shadow:
-        0 0 10px #8C78B4,
-        0 0 20px #8C78B4,
-        0 0 30px #8C78B4,
-        0 0 60px #6E90B0;
-      color: #F8F4FF;
-    }
+  .bar {
+    display: inline-block;
+    width: 4px;
+    margin: 0 2px;
+    background: #4a6a72;
+    animation: bounce 1.2s ease-in-out infinite;
+    border-radius: 3px;
+  }
+  .bar:nth-child(1) { animation-delay: 0s; }
+  .bar:nth-child(2) { animation-delay: 0.15s; }
+  .bar:nth-child(3) { animation-delay: 0.3s; }
+  .bar:nth-child(4) { animation-delay: 0.45s; }
+  .bar:nth-child(5) { animation-delay: 0.6s; }
+  .bar:nth-child(6) { animation-delay: 0.75s; }
+  .bar:nth-child(7) { animation-delay: 0.9s; }
+  .bar:nth-child(8) { animation-delay: 1.05s; }
+  .bar:nth-child(9) { animation-delay: 1.2s; }
+
+  @keyframes bounce {
+    0%, 100% { height: 10px; }
+    50% { height: 40px; }
   }
 
   #now-playing {
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    animation: glowPulse 3s ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.9rem;
+    margin-bottom: 1.2em;
+    min-height: 5em;
+    color: #e0f7fa;
+    text-shadow:
+      2px 2px 8px #3a5a63,
+      0 0 10px #55a5b1;
+    user-select: none;
+    position: relative;
   }
 
-  #album-art {
-    width: 250px;
-    height: 250px;
-    object-fit: cover;
+  #now-playing img#cover-art {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 0.6em;
     border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
-    margin-bottom: 1.5rem;
-    opacity: 0;
-    transition: opacity 0.8s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.85);
+    transition: opacity 0.5s ease;
   }
 
-  #album-art.visible {
-    opacity: 1;
-  }
-
-  #recently-played-heading {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 0.6rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  #recent-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+    color: #d4e8eb;
+    text-shadow: 1px 1px 4px #2b4147;
+    user-select: none;
   }
 
   #recently-played {
-    max-width: 400px;
-    margin: 0 auto 3rem;
-    padding: 0.5rem;
-    background: rgba(20, 20, 30, 0.5);
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(140, 120, 180, 0.7);
     list-style: none;
-    color: #ddd;
-    font-weight: 600;
+    padding: 0;
+    max-width: 420px;
+    margin: 0 auto 2em auto;
     font-size: 1rem;
+    background: rgba(0,0,0,0.12);
+    border-radius: 8px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    user-select: none;
   }
 
   #recently-played li {
-    padding: 8px 12px;
-    margin: 6px 0;
-    border-radius: 8px;
-    background: rgba(255 255 255 / 0.1);
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: slideFadeIn 0.6s forwards;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    padding: 0.5em 1em;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
   }
 
-  #recently-played li.new {
-    background: rgba(140, 120, 180, 0.8);
-    color: #fff;
-    box-shadow: 0 0 10px #b495d9;
-  }
-
-  @keyframes slideFadeIn {
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+  #recently-played li:last-child {
+    border-bottom: none;
   }
 
   #phone {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-    cursor: pointer;
-    display: inline-block;
-    padding: 0.3rem 1rem;
-    border-radius: 12px;
-    background: rgba(255 255 255 / 0.15);
-    box-shadow: 0 0 8px rgba(140,120,180,0.7);
-    transition: box-shadow 0.6s ease;
+    font-size: 1.3rem;
+    margin-top: auto;
+    padding: 1em 0;
+    color: #cce7e9;
+    text-shadow:
+      1.5px 1.5px 3px #204040,
+      0 0 15px #4a6a72;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
     user-select: none;
+    cursor: pointer;
   }
+
   #phone:hover {
-    box-shadow: 0 0 20px rgba(140,120,180,1);
+    animation: pulsePhone 1.5s infinite alternate ease-in-out;
+  }
+
+  @keyframes pulsePhone {
+    0% { text-shadow: 1.5px 1.5px 3px #204040, 0 0 15px #4a6a72;}
+    100% { text-shadow: 2.5px 2.5px 7px #204040, 0 0 30px #6b8b93; }
+  }
+
+  #about {
+    max-width: 520px;
+    margin: 0 auto 2em auto;
+    font-size: 1rem;
+    color: #ccc;
+    text-shadow: 1px 1px 2px #111;
+    padding: 1em 1.2em;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
   }
 </style>
 </head>
@@ -180,127 +227,99 @@
 <img id="logo" src="https://i.imgur.com/VzBkTa5.png" alt="Carsten's CD Collection Logo" />
 
 <h1>Carsten's CD Collection Radio</h1>
+<div id="description">Streaming hand-picked tracks from a vast CD library – live commentary included</div>
 
-<div id="description">
-  Streaming hand-picked tracks from a vast CD library – live commentary included
-</div>
-
-<div id="phone" title="Call or text to request songs or chat!">
-  📞 Want to request a song or just chat? Call or text: (908) 605-0391
-</div>
-
-<audio id="audio-player" controls autoplay muted playsinline>
-  <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg" />
+<audio controls autoplay>
+  <source src="https://acidic-judicious-dill.glitch.me/proxy" type="audio/mpeg" />
   Your browser does not support the audio element.
 </audio>
 
-<div id="now-playing-label">Now Playing</div>
-<div id="now-playing">Loading…</div>
+<div id="waveform" aria-hidden="true">
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+</div>
 
-<img id="album-art" alt="Album Art" />
+<div id="now-playing">Loading now playing...</div>
 
-<h2 id="recently-played-heading">Recently Played</h2>
+<div id="recent-title">Recently Played</div>
 <ul id="recently-played"></ul>
 
+<div id="phone" title="Call or text (908) 605-0391">📞 Want to request a song or just chat? Call or text: (908) 605-0391</div>
+
 <div id="about">
-  My name is Carsten Lepre and I'm a 16 year old music lover and CD collector! Carsten's CD Collection brings you my absolute favorite cuts from my actual CD collection, from John Mayer, to Coldplay, Beatles, Tame Impala, and more. Stick around for live commentary, album listen-throughs, and an all-around good time!
+  My name is Carsten Lepre and I'm a 16 year old music lover and CD collector! Carsten's CD Collection brings you my absolute favorite cuts from my actual CD collection, from John Mayer to Coldplay, Beatles, Tame Impala, and more. Stick around for live commentary, album listen-throughs, and an all-around good time!
 </div>
 
 <script>
-  const trackElem = document.getElementById("now-playing");
-  const recentElem = document.getElementById("recently-played");
-  const albumArtElem = document.getElementById("album-art");
-  const audio = document.getElementById("audio-player");
-
-  let lastTrack = "";
+  const nowPlayingElem = document.getElementById('now-playing');
+  const recentElem = document.getElementById('recently-played');
   let recentTracks = [];
-  let pendingTitle = null;
+  let lastTrack = '';
 
-  function showAlbumArt(url) {
-    albumArtElem.classList.remove("visible");
-    albumArtElem.src = url;
-    albumArtElem.onload = () => {
-      albumArtElem.classList.add("visible");
-    };
+  function cleanTrackTitle(title) {
+    return title.replace(/\s*\(.*?\)|\s*\[.*?\]/g, '').trim();
   }
 
-  async function fetchAlbumArt(trackTitle) {
+  async function fetchCoverArt(track) {
+    const cleanTitle = cleanTrackTitle(track);
+    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(cleanTitle)}&entity=song&limit=1`;
     try {
-      let artist = "";
-      let song = trackTitle;
-      if (trackTitle.includes(" - ")) {
-        [artist, song] = trackTitle.split(" - ").map(s => s.trim());
-      }
-      const query = encodeURIComponent(`${artist} ${song}`);
-      const url = `https://itunes.apple.com/search?term=${query}&limit=1&media=music`;
-
       const res = await fetch(url);
-      const data = await res.json();
-      if (data.results && data.results.length > 0) {
-        let artUrl = data.results[0].artworkUrl100.replace("100x100bb.jpg", "500x500bb.jpg");
-        showAlbumArt(artUrl);
-      } else {
-        albumArtElem.classList.remove("visible");
+      const json = await res.json();
+      if (json.resultCount > 0) {
+        return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
       }
-    } catch {
-      albumArtElem.classList.remove("visible");
+      return null;
+    } catch (e) {
+      console.warn('Cover art fetch failed:', e);
+      return null;
     }
   }
-
-  function renderRecentTracks() {
-    recentElem.innerHTML = "";
-    recentTracks.forEach((track, i) => {
-      const li = document.createElement("li");
-      li.textContent = track;
-      if (i === 0) {
-        li.classList.add("new");
-        setTimeout(() => li.classList.remove("new"), 2500);
-      }
-      recentElem.appendChild(li);
-    });
-  }
-
-  function updateNowPlaying(title) {
-    trackElem.textContent = title;
-    if (!recentTracks.includes(title)) {
-      recentTracks.unshift(title);
-      if (recentTracks.length > 5) recentTracks.pop();
-      renderRecentTracks();
-    }
-    fetchAlbumArt(title);
-  }
-
-  audio.addEventListener("playing", () => {
-    if (pendingTitle) {
-      updateNowPlaying(pendingTitle);
-      pendingTitle = null;
-    }
-  });
 
   async function fetchNowPlaying() {
     try {
-      const res = await fetch("https://lime-abyssinian-responsibility.glitch.me/proxy");
+      const res = await fetch('https://lime-abyssinian-responsibility.glitch.me/status-json');
       const data = await res.json();
-
-      const title = data.icestats.source?.title || "No track info available";
-
-      if (title !== lastTrack && title !== "No track info available") {
+      const title = data.icestats.source?.title || 'No track info available';
+      if (title !== lastTrack && title !== 'No track info available') {
         lastTrack = title;
-        pendingTitle = title;
+        nowPlayingElem.textContent = `Now Playing: ${title}`;
 
-        // Update UI after 3 seconds as a fallback
-        setTimeout(() => {
-          if (pendingTitle) {
-            updateNowPlaying(pendingTitle);
-            pendingTitle = null;
+        const coverUrl = await fetchCoverArt(title);
+        if (coverUrl) {
+          let img = document.getElementById('cover-art');
+          if (!img) {
+            img = document.createElement('img');
+            img.id = 'cover-art';
+            nowPlayingElem.prepend(img);
           }
-        }, 3000);
+          img.src = coverUrl;
+          img.style.opacity = '1';
+        } else {
+          const existingImg = document.getElementById('cover-art');
+          if (existingImg) existingImg.style.opacity = '0';
+        }
+
+        if (!recentTracks.includes(title)) {
+          recentTracks.unshift(title);
+          if (recentTracks.length > 5) recentTracks.pop();
+          renderRecent();
+        }
       }
-    } catch (err) {
-      trackElem.textContent = "Unable to load track info.";
-      albumArtElem.classList.remove("visible");
-      console.error(err);
+    } catch (e) {
+      nowPlayingElem.textContent = 'Unable to load track info.';
+      console.error(e);
     }
+  }
+
+  function renderRecent() {
+    recentElem.innerHTML = '';
+    recentTracks.forEach(track => {
+      const li = document.createElement('li');
+      li.textContent = track;
+      recentElem.appendChild(li);
+    });
   }
 
   fetchNowPlaying();

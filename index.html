@@ -1,69 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Carsten’s CD Collection Radio</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #5b8cff, #f4b1ff);
-      color: #fff;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      padding: 2rem 1rem;
-    }
-    h1 {
-      font-size: 2.5rem;
-      margin: 0;
-    }
-    h2 {
-      font-weight: 400;
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-    }
-    audio {
-      margin: 2rem auto;
-      width: 300px;
-    }
-    .call {
-      margin: 2rem auto;
-      font-size: 1.1rem;
-    }
-    footer {
-      margin-top: auto;
-      padding: 1rem;
-      font-size: 0.9rem;
-      background: rgba(0, 0, 0, 0.1);
-    }
-    a {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Carsten's CD Collection Radio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, rgb(75,103,114), rgb(140, 120, 180));
+    color: #eee;
+    text-align: center;
+    padding: 2rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin: 0.25rem 0 1rem;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.7);
+  }
+
+  #logo {
+    width: 220px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+    margin-bottom: 1rem;
+  }
+
+  #description, #phone, #about {
+    max-width: 600px;
+    margin: 0.5rem auto 1.5rem;
+    font-size: 1.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+  audio {
+    margin-bottom: 2rem;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+    outline: none;
+  }
+
+  #now-playing {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  #recently-played {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 0 auto 3rem;
+  }
+
+  #recently-played li {
+    background: rgba(255 255 255 / 0.1);
+    margin: 0.4rem 0;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+</style>
 </head>
 <body>
-  <header>
-    <h1>🎶 Carsten’s CD Collection Radio</h1>
-    <h2>Streaming hand-picked tracks from a vast CD library – live commentary included</h2>
-  </header>
 
-  <audio controls autoplay>
-    <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+<img id="logo" src="https://i.imgur.com/VzBkTa5.png" alt="Carsten's CD Collection Logo" />
 
-  <div class="call">
-    📞 Want to request a song or just chat? Call or text: <strong>(908) 605-0391</strong>
-  </div>
+<h1>Carsten's CD Collection Radio</h1>
 
-  <footer>
-    📻 Proudly <a href="http://www.internet-radio.com" target="_blank">listed on Internet-Radio.com</a>
-  </footer>
+<div id="description">
+  Streaming hand-picked tracks from a vast CD library – live commentary included
+</div>
+
+<div id="phone">
+  📞 Want to request a song or just chat? Call or text: (908) 605-0391
+</div>
+
+<audio controls autoplay muted playsinline>
+  <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg" />
+  Your browser does not support the audio element.
+</audio>
+
+<div id="now-playing">Loading now playing…</div>
+
+<ul id="recently-played"></ul>
+
+<div id="about">
+  My name is Carsten Lepre and I'm a 16 year old music lover and CD collector! Carsten's CD Collection brings you my absolute favorite cuts from my actual CD collection, from John Mayer, to Coldplay, Beatles, Tame Impala, and more. Stick around for live commentary, album listen-throughs, and an all-around good time!
+</div>
+
+<script>
+  const trackElem = document.getElementById("now-playing");
+  const recentElem = document.getElementById("recently-played");
+
+  let lastTrack = "";
+  let recentTracks = [];
+
+  async function fetchNowPlaying() {
+    try {
+      const res = await fetch("https://lime-abyssinian-responsibility.glitch.me/proxy");
+      const data = await res.json();
+
+      const title = data.icestats.source?.title || "No track info available";
+
+      if (title !== lastTrack && title !== "No track info available") {
+        lastTrack = title;
+        trackElem.textContent = title;
+
+        if (!recentTracks.includes(title)) {
+          recentTracks.unshift(title);
+          if (recentTracks.length > 5) recentTracks.pop();
+          renderRecentTracks();
+        }
+      }
+    } catch (err) {
+      trackElem.textContent = "Unable to load track info.";
+      console.error(err);
+    }
+  }
+
+  function renderRecentTracks() {
+    recentElem.innerHTML = "";
+    recentTracks.forEach(track => {
+      const li = document.createElement("li");
+      li.textContent = track;
+      recentElem.appendChild(li);
+    });
+  }
+
+  fetchNowPlaying();
+  setInterval(fetchNowPlaying, 15000); // update every 15 seconds
+</script>
+
 </body>
 </html>

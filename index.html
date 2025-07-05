@@ -7,10 +7,27 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
 
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   body {
     margin: 0;
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, rgb(75,103,114), rgb(140, 120, 180));
+    background: linear-gradient(
+      270deg,
+      #4b6772,
+      #6e90b0,
+      #8c78b4,
+      #b495d9,
+      #8c78b4,
+      #6e90b0,
+      #4b6772
+    );
+    background-size: 1400% 1400%;
+    animation: gradientShift 40s ease infinite;
     color: #eee;
     text-align: center;
     padding: 2rem;
@@ -49,26 +66,112 @@
     outline: none;
   }
 
+  #now-playing-label {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      text-shadow:
+        0 0 5px #8C78B4,
+        0 0 10px #8C78B4,
+        0 0 20px #8C78B4,
+        0 0 40px #6E90B0;
+      color: #E0D7FF;
+    }
+    50% {
+      text-shadow:
+        0 0 10px #8C78B4,
+        0 0 20px #8C78B4,
+        0 0 30px #8C78B4,
+        0 0 60px #6E90B0;
+      color: #F8F4FF;
+    }
+  }
+
   #now-playing {
     font-size: 1.8rem;
-    margin-bottom: 1rem;
     font-weight: 700;
+    margin-bottom: 1rem;
+    animation: glowPulse 3s ease-in-out infinite;
+  }
+
+  #album-art {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  #album-art.visible {
+    opacity: 1;
+  }
+
+  #recently-played-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
     text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
 
   #recently-played {
-    list-style: none;
-    padding: 0;
     max-width: 400px;
     margin: 0 auto 3rem;
+    padding: 0.5rem;
+    background: rgba(20, 20, 30, 0.5);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(140, 120, 180, 0.7);
+    list-style: none;
+    color: #ddd;
+    font-weight: 600;
+    font-size: 1rem;
   }
 
   #recently-played li {
-    background: rgba(255 255 255 / 0.1);
-    margin: 0.4rem 0;
-    padding: 0.5rem 1rem;
+    padding: 8px 12px;
+    margin: 6px 0;
     border-radius: 8px;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    background: rgba(255 255 255 / 0.1);
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideFadeIn 0.6s forwards;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  #recently-played li.new {
+    background: rgba(140, 120, 180, 0.8);
+    color: #fff;
+    box-shadow: 0 0 10px #b495d9;
+  }
+
+  @keyframes slideFadeIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  #phone {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 12px;
+    background: rgba(255 255 255 / 0.15);
+    box-shadow: 0 0 8px rgba(140,120,180,0.7);
+    transition: box-shadow 0.6s ease;
+    user-select: none;
+  }
+  #phone:hover {
+    box-shadow: 0 0 20px rgba(140,120,180,1);
   }
 </style>
 </head>
@@ -82,17 +185,21 @@
   Streaming hand-picked tracks from a vast CD library – live commentary included
 </div>
 
-<div id="phone">
+<div id="phone" title="Call or text to request songs or chat!">
   📞 Want to request a song or just chat? Call or text: (908) 605-0391
 </div>
 
-<audio controls autoplay muted playsinline>
+<audio id="audio-player" controls autoplay muted playsinline>
   <source src="http://eagle.streemlion.com:4225/live" type="audio/mpeg" />
   Your browser does not support the audio element.
 </audio>
 
-<div id="now-playing">Loading now playing…</div>
+<div id="now-playing-label">Now Playing</div>
+<div id="now-playing">Loading…</div>
 
+<img id="album-art" alt="Album Art" />
+
+<h2 id="recently-played-heading">Recently Played</h2>
 <ul id="recently-played"></ul>
 
 <div id="about">
@@ -102,9 +209,73 @@
 <script>
   const trackElem = document.getElementById("now-playing");
   const recentElem = document.getElementById("recently-played");
+  const albumArtElem = document.getElementById("album-art");
+  const audio = document.getElementById("audio-player");
 
   let lastTrack = "";
   let recentTracks = [];
+  let pendingTitle = null;
+
+  function showAlbumArt(url) {
+    albumArtElem.classList.remove("visible");
+    albumArtElem.src = url;
+    albumArtElem.onload = () => {
+      albumArtElem.classList.add("visible");
+    };
+  }
+
+  async function fetchAlbumArt(trackTitle) {
+    try {
+      let artist = "";
+      let song = trackTitle;
+      if (trackTitle.includes(" - ")) {
+        [artist, song] = trackTitle.split(" - ").map(s => s.trim());
+      }
+      const query = encodeURIComponent(`${artist} ${song}`);
+      const url = `https://itunes.apple.com/search?term=${query}&limit=1&media=music`;
+
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.results && data.results.length > 0) {
+        let artUrl = data.results[0].artworkUrl100.replace("100x100bb.jpg", "500x500bb.jpg");
+        showAlbumArt(artUrl);
+      } else {
+        albumArtElem.classList.remove("visible");
+      }
+    } catch {
+      albumArtElem.classList.remove("visible");
+    }
+  }
+
+  function renderRecentTracks() {
+    recentElem.innerHTML = "";
+    recentTracks.forEach((track, i) => {
+      const li = document.createElement("li");
+      li.textContent = track;
+      if (i === 0) {
+        li.classList.add("new");
+        setTimeout(() => li.classList.remove("new"), 2500);
+      }
+      recentElem.appendChild(li);
+    });
+  }
+
+  function updateNowPlaying(title) {
+    trackElem.textContent = title;
+    if (!recentTracks.includes(title)) {
+      recentTracks.unshift(title);
+      if (recentTracks.length > 5) recentTracks.pop();
+      renderRecentTracks();
+    }
+    fetchAlbumArt(title);
+  }
+
+  audio.addEventListener("playing", () => {
+    if (pendingTitle) {
+      updateNowPlaying(pendingTitle);
+      pendingTitle = null;
+    }
+  });
 
   async function fetchNowPlaying() {
     try {
@@ -115,31 +286,25 @@
 
       if (title !== lastTrack && title !== "No track info available") {
         lastTrack = title;
-        trackElem.textContent = title;
+        pendingTitle = title;
 
-        if (!recentTracks.includes(title)) {
-          recentTracks.unshift(title);
-          if (recentTracks.length > 5) recentTracks.pop();
-          renderRecentTracks();
-        }
+        // Update UI after 3 seconds as a fallback
+        setTimeout(() => {
+          if (pendingTitle) {
+            updateNowPlaying(pendingTitle);
+            pendingTitle = null;
+          }
+        }, 3000);
       }
     } catch (err) {
       trackElem.textContent = "Unable to load track info.";
+      albumArtElem.classList.remove("visible");
       console.error(err);
     }
   }
 
-  function renderRecentTracks() {
-    recentElem.innerHTML = "";
-    recentTracks.forEach(track => {
-      const li = document.createElement("li");
-      li.textContent = track;
-      recentElem.appendChild(li);
-    });
-  }
-
   fetchNowPlaying();
-  setInterval(fetchNowPlaying, 15000); // update every 15 seconds
+  setInterval(fetchNowPlaying, 15000);
 </script>
 
 </body>

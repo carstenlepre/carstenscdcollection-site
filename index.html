@@ -120,6 +120,7 @@
   .recently-played-list li:last-child {
     border-bottom: none;
   }
+  /* Center cover art on home page */
   #home #home-cover-art {
     width: 140px;
     height: 140px;
@@ -129,6 +130,9 @@
     opacity: 0;
     transition: opacity 0.5s ease;
     margin-bottom: 1rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   /* Listen Now */
@@ -209,9 +213,20 @@
       padding: 0.6rem 1.2rem;
       margin: 0 0.3rem;
     }
-    #content {
-      padding: 0 1rem;
-      max-width: 100%;
+    /* Fix nav buttons to stay in a row with horizontal scroll */
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      overflow-x: auto;
+      padding: 0 0.5rem;
+    }
+    nav::-webkit-scrollbar {
+      height: 6px;
+    }
+    nav::-webkit-scrollbar-thumb {
+      background-color: rgba(176,126,166,0.7);
+      border-radius: 3px;
     }
   }
 </style>
@@ -236,22 +251,20 @@
       <ul class="recently-played-list"></ul>
     </section>
 
-<section id="listen" aria-label="Listen Now section">
-  <audio id="audio-player" controls>
-    <source src="https://eagle.streemlion.com/proxy/carsten?mp=/stream" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <section id="listen" aria-label="Listen Now section">
+      <audio id="audio-player" controls>
+        <source src="https://eagle.streemlion.com/proxy/carsten?mp=/stream" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
 
-  <img id="listen-cover-art" alt="Album cover art" style="width: 280px; height: 280px; border-radius: 12px; margin: 1rem auto; display: block; object-fit: cover; opacity: 0; transition: opacity 0.3s ease;" />
+      <img id="listen-cover-art" alt="Album cover art" />
 
-  <div class="now-playing-title" style="font-size: 1.2rem; font-weight: 600; margin-top: 0.6rem; color: #e5f6ff; text-shadow: 1px 1px 2px #2c3e50;">
-    Loading now playing...
-  </div>
+      <div class="now-playing-title">
+        Loading now playing...
+      </div>
 
-  <ul class="recently-played-list" style="max-width: 420px; margin: 1rem auto; padding: 0.5rem 1rem; background-color: rgba(0,0,0,0.15); border-radius: 8px; list-style: none; color: #eee; box-shadow: 0 4px 14px rgba(0,0,0,0.3);">
-    <!-- Recently played songs will be injected here -->
-  </ul>
-</section>
+      <ul class="recently-played-list"></ul>
+    </section>
 
     <section id="requests" aria-label="Requests and Call section">
       <h2>Send in your requests or song submissions below!</h2>
@@ -335,6 +348,8 @@
     }
 
     if (rawTitle === lastTrack) return;
+
+    let firstLoad = lastTrack === '';
     lastTrack = rawTitle;
 
     let artist = 'Unknown Artist';
@@ -363,6 +378,16 @@
 
     const coverUrl = await fetchCoverArt(title);
     if (coverUrl) {
+      if (firstLoad) {
+        if (coverArtListen) {
+          coverArtListen.src = coverUrl;
+          coverArtListen.style.opacity = '1';
+        }
+        if (coverArtHome) {
+          coverArtHome.src = coverUrl;
+          coverArtHome.style.opacity = '1';
+        }
+      }
       if (updateTimeout) clearTimeout(updateTimeout);
       updateTimeout = setTimeout(() => {
         if (coverArtListen) {
@@ -373,7 +398,7 @@
           coverArtHome.src = coverUrl;
           coverArtHome.style.opacity = '1';
         }
-      }, 7000); // 7 second delay to match stream lag, avoid spoilers
+      }, 500);
     } else {
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
@@ -397,7 +422,7 @@
   }
 
   fetchMetadata();
-  setInterval(fetchMetadata, 15000);
+  setInterval(fetchMetadata, 5000);
 </script>
 
 </body>

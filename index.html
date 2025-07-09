@@ -47,6 +47,10 @@
 
   nav {
     margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 0.6rem; /* space between buttons */
   }
 
   .nav-btn {
@@ -54,15 +58,15 @@
     border: none;
     color: #eee;
     font-weight: 700;
-    padding: 0.7rem 1.6rem;
-    margin: 0 0.8rem;
+    padding: 0.5rem 1.1rem;
     border-radius: 14px;
     cursor: pointer;
     box-shadow: 0 0 6px #b07ea6;
     transition: all 0.3s ease;
     user-select: none;
-    font-size: 1.15rem;
-    letter-spacing: 1.4px;
+    font-size: 1rem;
+    letter-spacing: 1.2px;
+    white-space: nowrap; /* prevent text wrap inside button */
   }
   .nav-btn:hover, .nav-btn:focus {
     box-shadow:
@@ -70,7 +74,7 @@
       0 0 20px #b07ea6,
       0 0 28px #d3a7e0,
       0 0 40px #b07ea6;
-    transform: scale(1.12);
+    transform: scale(1.1);
     outline: none;
   }
 
@@ -209,16 +213,15 @@
       height: 110px;
     }
     .nav-btn {
-      font-size: 1rem;
-      padding: 0.6rem 1.2rem;
-      margin: 0 0.3rem;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      margin: 0;
     }
     nav {
-      display: flex;
       justify-content: center;
-      gap: 0.8rem;
-      overflow-x: visible; /* no scrolling */
-      padding: 0 0.5rem;
+      gap: 0.4rem;
+      overflow-x: visible;
+      flex-wrap: wrap; /* allow buttons to wrap */
     }
   }
 </style>
@@ -333,9 +336,11 @@
     const rawTitle = data.nowPlaying || '';
 
     if (!rawTitle || rawTitle.toLowerCase() === 'no track info') {
-      nowPlayingElems.forEach(el => el.textContent = 'No track info available.');
+      const offlineMsg = "The station is netlike right now! Check @carstenscdradio on Instagram for updates and scheduling.";
+      nowPlayingElems.forEach(el => el.textContent = offlineMsg);
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
+      recentlyPlayedULs.forEach(ul => ul.innerHTML = '');
       return;
     }
 
@@ -389,7 +394,7 @@
           coverArtHome.src = coverUrl;
           coverArtHome.style.opacity = '1';
         }
-      }, 4000); // shortened to 4 seconds
+      }, 4000); // 4 second delay for future updates
     } else {
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
@@ -404,7 +409,8 @@
       const data = await res.json();
       await updateMetadata(data);
     } catch (error) {
-      nowPlayingElems.forEach(el => el.textContent = 'The station is not live right now! Check @carstenscdradio on Instagram for updates and scheduling.');
+      const offlineMsg = "The station is netlike right now! Check @carstenscdradio on Instagram for updates and scheduling.";
+      nowPlayingElems.forEach(el => el.textContent = offlineMsg);
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
       recentlyPlayedULs.forEach(ul => ul.innerHTML = '');

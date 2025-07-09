@@ -233,7 +233,7 @@
 <div id="description">Streaming hand-picked tracks from a vast CD library – live commentary included</div>
 
 <audio controls autoplay>
-  <source src="https://acidic-judicious-dill.glitch.me/proxy" type="audio/mpeg" />
+  <source src="https://e9ed0bac-d2cc-42ca-8009-e5861dd3b2a9-00-ai6mgsmbyqdn.worf.replit.dev/proxy" type="audio/mpeg" />
   Your browser does not support the audio element.
 </audio>
 
@@ -295,12 +295,14 @@
 
   async function fetchNowPlaying() {
     try {
-      const res = await fetch('https://lime-abyssinian-responsibility.glitch.me/status-json');
+      const res = await fetch('https://4ef78d5b-9ed1-4b9f-a46b-38ffbf9dd963-00-2m5o0s63ej8rx.janeway.replit.dev/metadata');
       const data = await res.json();
-      const title = data.icestats.source?.title || 'No track info available';
+      const title = data.streamTitle || 'No track info available';
+
       if (title !== lastTrack && title !== 'No track info available') {
         lastTrack = title;
         nowPlayingElem.textContent = `Now Playing: ${title}`;
+
         const coverUrl = await fetchCoverArt(title);
         if (coverUrl) {
           let img = document.getElementById('cover-art');
@@ -312,6 +314,7 @@
           img.src = coverUrl;
           img.style.opacity = '1';
         }
+
         if (!recentTracks.includes(title)) {
           recentTracks.unshift(title);
           if (recentTracks.length > 5) recentTracks.pop();
@@ -320,6 +323,7 @@
       }
     } catch (e) {
       nowPlayingElem.textContent = 'Unable to load track info.';
+      console.error(e);
     }
   }
 

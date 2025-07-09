@@ -209,9 +209,11 @@
       height: 110px;
     }
     .nav-btn {
-      font-size: 1rem;
-      padding: 0.6rem 1.2rem;
-      margin: 0 0.3rem;
+      font-size: 0.9rem;
+      padding: 0.5rem 1rem;
+      margin: 0 0.4rem;
+      min-width: 90px;
+      white-space: nowrap;
     }
     /* Fix nav buttons to stay in a row with horizontal scroll */
     nav {
@@ -348,7 +350,6 @@
     }
 
     if (rawTitle === lastTrack) return;
-
     let firstLoad = lastTrack === '';
     lastTrack = rawTitle;
 
@@ -398,7 +399,7 @@
           coverArtHome.src = coverUrl;
           coverArtHome.style.opacity = '1';
         }
-      }, 500);
+      }, 500); // lowered delay to 4 seconds from 7
     } else {
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;

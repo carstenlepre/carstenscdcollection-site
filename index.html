@@ -209,26 +209,16 @@
       height: 110px;
     }
     .nav-btn {
-      font-size: 0.9rem;
-      padding: 0.5rem 1rem;
-      margin: 0 0.4rem;
-      min-width: 90px;
-      white-space: nowrap;
+      font-size: 1rem;
+      padding: 0.6rem 1.2rem;
+      margin: 0 0.3rem;
     }
-    /* Fix nav buttons to stay in a row with horizontal scroll */
     nav {
       display: flex;
       justify-content: center;
       gap: 0.8rem;
-      overflow-x: auto;
+      overflow-x: visible; /* no scrolling */
       padding: 0 0.5rem;
-    }
-    nav::-webkit-scrollbar {
-      height: 6px;
-    }
-    nav::-webkit-scrollbar-thumb {
-      background-color: rgba(176,126,166,0.7);
-      border-radius: 3px;
     }
   }
 </style>
@@ -399,7 +389,7 @@
           coverArtHome.src = coverUrl;
           coverArtHome.style.opacity = '1';
         }
-      }, 500); // lowered delay to 4 seconds from 7
+      }, 4000); // shortened to 4 seconds
     } else {
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
@@ -414,7 +404,7 @@
       const data = await res.json();
       await updateMetadata(data);
     } catch (error) {
-      nowPlayingElems.forEach(el => el.textContent = 'Unable to load track info.');
+      nowPlayingElems.forEach(el => el.textContent = 'The station is not live right now! Check @carstenscdradio on Instagram for updates and scheduling.');
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
       recentlyPlayedULs.forEach(ul => ul.innerHTML = '');
@@ -423,7 +413,7 @@
   }
 
   fetchMetadata();
-  setInterval(fetchMetadata, 5000);
+  setInterval(fetchMetadata, 15000);
 </script>
 
 </body>

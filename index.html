@@ -336,7 +336,7 @@
     const rawTitle = data.nowPlaying || '';
 
     if (!rawTitle || rawTitle.toLowerCase() === 'no track info') {
-      const offlineMsg = "The station is netlike right now! Check @carstenscdradio on Instagram for updates and scheduling.";
+      const offlineMsg = "The station is not live right now! Check @carstenscdradio on Instagram for updates and scheduling.";
       nowPlayingElems.forEach(el => el.textContent = offlineMsg);
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;

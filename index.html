@@ -373,9 +373,12 @@
     return title.replace(/\s*\(.*?\)|\s*\[.*?\]/g, '').trim();
   }
 
-  async function fetchCoverArt(track) {
-  const [artist, title] = track.split(' - ').map(s => s.trim());
+ function normalize(str) {
+  return str.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
 
+async function fetchCoverArt(track) {
+  const [artist, title] = track.split(' - ').map(s => s.trim());
   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=10`;
 
   try {
@@ -383,9 +386,11 @@
     const json = await res.json();
 
     if (json.resultCount > 0) {
-      // Try to find an exact artist match
-      const match = json.results.find(result =>
-        result.artistName.toLowerCase() === artist.toLowerCase()
+      const normalizedArtist = normalize(artist);
+
+      // Try to find a fuzzy match by normalized artist
+      const match = json.results.find(result => 
+        normalize(result.artistName).includes(normalizedArtist)
       );
 
       const resultToUse = match || json.results[0];

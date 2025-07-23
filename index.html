@@ -373,25 +373,29 @@
     return title.replace(/\s*\(.*?\)|\s*\[.*?\]/g, '').trim();
   }
 
- async function fetchCoverArt(track, artist = null) {
+
+
+async function fetchCoverArt(track, artist) {
     const cleanTitle = cleanTrackTitle(track);
     let searchTerm = cleanTitle;
 
+    // Add artist and/or album to the search term if available
     if (artist) {
         searchTerm += ` ${artist}`;
     }
     else {
-        searchTerm += ` wigwamcenter`;
+        searchTerm += ' wigwamcenter';
     }
 
-    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=10`;
+    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=10`;  // Fetch multiple results
 
     try {
         const res = await fetch(url);
         const json = await res.json();
 
         if (json.resultCount > 0) {
-           const normalize = str =>
+            // Try to find the exact match based on title and artist
+            const normalize = str =>
   cleanTrackTitle(str)
     .toLowerCase()
     .replace(/[^\w\s]/g, '') // remove punctuation
@@ -411,7 +415,7 @@ json.results.forEach((result, index) => {
   const resultTitle = normalize(result.trackName);
   const resultArtist = result.artistName.toLowerCase();
 
- let score = 0;
+let score = 0;
 
 // Prioritize good title match
 if (resultTitle === normalizedSearchTitle) {
@@ -435,7 +439,6 @@ if (badAlbumKeywords.some(keyword => albumName.includes(keyword))) {
   score -= 2;
 }
 
-
   console.log(`  [${index + 1}] "${result.trackName}" by "${result.artistName}"`);
   console.log(`       → Normalized title: "${resultTitle}"`);
   console.log(`       → Normalized artist: "${resultArtist}"`);
@@ -452,14 +455,14 @@ if (bestMatch) {
   return bestMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
 }
 
-
-             return 'https://i.imgur.com/SKEYAYe.png';
+            // If no exact match, return a generic image
+            return 'https://i.imgur.com/SKEYAYe.png';  // Generic placeholder image
         }
 
-        return 'https://i.imgur.com/SKEYAYe.png';
+        return 'https://i.imgur.com/SKEYAYe.png';  // Generic placeholder image if no results
     } catch (e) {
         console.warn('Cover art fetch failed:', e);
-        return 'https://i.imgur.com/SKEYAYe.png';
+        return 'https://i.imgur.com/SKEYAYe.png';  // Return generic image on error
     }
 }
 
@@ -479,7 +482,7 @@ if (bestMatch) {
     let firstLoad = lastTrack === '';
     lastTrack = rawTitle;
 
-    let artist = 'Unknown Artist';
+    let artist = null;
     let title = rawTitle;
     if (rawTitle.includes(' - ')) {
       [artist, title] = rawTitle.split(' - ').map(s => s.trim());
@@ -503,7 +506,7 @@ if (bestMatch) {
       });
     });
 
-    const coverUrl = await fetchCoverArt(title);
+    const coverUrl = await fetchCoverArt(title, artist);
     if (coverUrl) {
       if (firstLoad) {
         if (coverArtListen) {
@@ -555,3 +558,4 @@ if (bestMatch) {
 
 </body>
 </html>
+

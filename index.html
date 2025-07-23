@@ -374,20 +374,25 @@
   }
 
   async function fetchCoverArt(track) {
-    const cleanTitle = cleanTrackTitle(track);
-    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(cleanTitle)}&entity=song&limit=1`;
-    try {
-      const res = await fetch(url);
-      const json = await res.json();
-      if (json.resultCount > 0) {
-        return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
-      }
-      return null;
-    } catch (e) {
-      console.warn('Cover art fetch failed:', e);
-      return null;
+  const cleanTitle = cleanTrackTitle(track);
+  const [artist, title] = track.split(' - ').map(s => s.trim());
+
+
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=1`;
+
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+
+    if (json.resultCount > 0) {
+      return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
     }
+    return null;
+  } catch (e) {
+    console.warn('Cover art fetch failed:', e);
+    return null;
   }
+}
 
   async function updateMetadata(data) {
     const rawTitle = data.nowPlaying || '';

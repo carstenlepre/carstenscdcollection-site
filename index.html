@@ -388,11 +388,67 @@ async function fetchCoverArt(track, artist = null) {
         const json = await res.json();
 
         if (json.resultCount > 0) {
-            const exactMatch = json.results.find(result => cleanTrackTitle(result.trackName) === cleanTitle);
-            if (exactMatch) {
-                return exactMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+           const normalize = str =>
+  cleanTrackTitle(str)
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '') // remove punctuation
+    .replace(/\s+/g, ' ')    // normalize spacing
+    .trim();
 
-            }
+const normalizedSearchTitle = normalize(track);
+const normalizedSearchArtist = artist ? artist.toLowerCase() : null;
+
+let bestMatch = null;
+let bestScore = 0;
+
+console.log(`🎯 [CoverArt] Matching "${normalizedSearchTitle}" ${normalizedSearchArtist ? `by "${normalizedSearchArtist}"` : ''}`);
+console.log(`📊 [CoverArt] Evaluating ${json.results.length} results:`);
+
+json.results.forEach((result, index) => {
+  const resultTitle = normalize(result.trackName);
+  const resultArtist = result.artistName.toLowerCase();
+
+ let score = 0;
+
+// Prioritize good title match
+if (resultTitle === normalizedSearchTitle) {
+  score += 5;
+} else if (resultTitle.includes(normalizedSearchTitle) || normalizedSearchTitle.includes(resultTitle)) {
+  score += 3;
+}
+
+// Prefer correct artist
+if (normalizedSearchArtist && resultArtist.includes(normalizedSearchArtist)) {
+  score += 2;
+}
+
+// Penalize albums with junk keywords
+const badAlbumKeywords = [
+  'greatest hits', 'deluxe', 'remaster', 'tribute',
+  'karaoke', 'single', 'soundtrack', 'voice performance'
+];
+const albumName = result.collectionName.toLowerCase();
+if (badAlbumKeywords.some(keyword => albumName.includes(keyword))) {
+  score -= 2;
+}
+
+
+  console.log(`  [${index + 1}] "${result.trackName}" by "${result.artistName}"`);
+  console.log(`       → Normalized title: "${resultTitle}"`);
+  console.log(`       → Normalized artist: "${resultArtist}"`);
+  console.log(`       → Match score: ${score}`);
+
+  if (score > bestScore) {
+    bestScore = score;
+    bestMatch = result;
+  }
+});
+
+if (bestMatch) {
+  console.log(`✅ [CoverArt] Selected: "${bestMatch.trackName}" by "${bestMatch.artistName}" (score: ${bestScore})`);
+  return bestMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+}
+
 
              return 'https://i.imgur.com/SKEYAYe.png';
         }

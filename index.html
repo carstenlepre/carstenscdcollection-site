@@ -379,7 +379,7 @@
 
 async function fetchCoverArt(track) {
   const cleanTitle = cleanTrackTitle(track);
-  const [artist, title] = track.split(' - ').map(s => s.trim());
+  const [artist, title] = cleanTrackTitle.split(' - ').map(s => s.trim());
 
 
   const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=10`;

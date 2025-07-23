@@ -371,31 +371,37 @@
 
   function cleanTrackTitle(title) {
     return title.replace(/\s*\(.*?\)|\s*\[.*?\]/g, '').trim();
-  }
-
- function normalize(str) {
-  return str.toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
-async function fetchCoverArt(track) {
-  const cleanTitle = cleanTrackTitle(track);
-  const [artist, title] = cleanTrackTitle.split(' - ').map(s => s.trim());
+async function fetchCoverArt(track, artist = null) {
+    const cleanTitle = cleanTrackTitle(track);
+    let searchTerm = cleanTitle;
 
-
-  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=10`;
-
-  try {
-    const res = await fetch(url);
-    const json = await res.json();
-
-    if (json.resultCount > 0) {
-      return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+    if (artist) {
+        searchTerm += ` ${artist}`;
     }
-    return null;
-  } catch (e) {
-    console.warn('Cover art fetch failed:', e);
-    return null;
-  }
+
+    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=10`;
+
+    try {
+        const res = await fetch(url);
+        const json = await res.json();
+
+        if (json.resultCount > 0) {
+            const exactMatch = json.results.find(result => cleanTrackTitle(result.trackName) === cleanTitle);
+            if (exactMatch) {
+                return exactMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+
+            }
+
+             return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+        }
+
+        return null;
+    } catch (e) {
+        console.warn('Cover art fetch failed:', e);
+        return null;
+    }
 }
 
   async function updateMetadata(data) {
@@ -414,7 +420,7 @@ async function fetchCoverArt(track) {
     let firstLoad = lastTrack === '';
     lastTrack = rawTitle;
 
-    let artist = 'Unknown Artist';
+    let artist = '';
     let title = rawTitle;
     if (rawTitle.includes(' - ')) {
       [artist, title] = rawTitle.split(' - ').map(s => s.trim());
@@ -438,7 +444,7 @@ async function fetchCoverArt(track) {
       });
     });
 
-    const coverUrl = await fetchCoverArt(title);
+    const coverUrl = await fetchCoverArt(title, artist);
     if (coverUrl) {
       if (firstLoad) {
         if (coverArtListen) {

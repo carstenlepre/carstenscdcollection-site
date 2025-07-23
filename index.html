@@ -397,10 +397,10 @@ async function fetchCoverArt(track, artist = null) {
              return 'https://i.imgur.com/SKEYAYe.png';
         }
 
-        return null;
+        return 'https://i.imgur.com/SKEYAYe.png';
     } catch (e) {
         console.warn('Cover art fetch failed:', e);
-        return null;
+        return 'https://i.imgur.com/SKEYAYe.png';
     }
 }
 

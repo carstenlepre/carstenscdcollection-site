@@ -259,11 +259,171 @@
       <ul class="recently-played-list"></ul>
     </section>
 
-    <section id="listen" aria-label="Listen Now section">
-      <audio id="audio-player" controls autoplay>
-        <source src="https://eagle.streemlion.com/proxy/carsten?mp=/stream" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
+    <section id="listen" aria-label="Listen Now section" style="max-width: 400px; margin: auto; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: #ddd; background: #2a2436; padding: 20px; border-radius: 12px; box-shadow: 0 0 20px rgba(142, 125, 180, 0.5);">
+
+  <!-- Hidden native audio element -->
+  <audio id="audio-player" src="https://eagle.streemlion.com/proxy/carsten?mp=/stream" preload="auto"></audio>
+
+  <!-- Custom controls container -->
+  <div id="custom-player" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+
+    <!-- Play/Pause button -->
+    <button id="play-pause" aria-label="Play" title="Play"
+      style="
+        background: linear-gradient(135deg, #8e7db4, #b07ea6);
+        border: none;
+        border-radius: 50%;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        box-shadow: 0 0 12px rgba(176, 126, 166, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        color: white;
+        user-select: none;
+        transition: box-shadow 0.3s ease;
+      ">
+      ▶
+    </button>
+
+    <!-- Track info -->
+    <div id="track-info" style="text-align: center;">
+      <div id="track-title" style="font-weight: 700; font-size: 1.2rem;">Live Stream</div>
+      <div id="track-artist" style="font-size: 0.9rem; color: #aaa;">Carsten’s CD Collection</div>
+    </div>
+
+    <!-- Progress bar container -->
+    <div id="progress-container"
+      style="
+        position: relative;
+        width: 100%;
+        height: 10px;
+        background: #3b3350;
+        border-radius: 10px;
+        cursor: pointer;
+        overflow: hidden;
+      "
+      aria-label="Track progress bar" role="slider" tabindex="0"
+    >
+      <div id="progress-bar"
+        style="
+          background: linear-gradient(90deg, #b07ea6, #8e7db4);
+          height: 100%;
+          width: 0%;
+          border-radius: 10px 0 0 10px;
+          transition: width 0.2s linear;
+        "
+      ></div>
+    </div>
+
+    <!-- Volume slider -->
+    <input
+      type="range"
+      id="volume-slider"
+      min="0"
+      max="1"
+      step="0.01"
+      value="1"
+      aria-label="Volume control"
+      style="
+        width: 100%;
+        cursor: pointer;
+        -webkit-appearance: none;
+        height: 6px;
+        border-radius: 5px;
+        background: #3b3350;
+        outline: none;
+      "
+    />
+  </div>
+
+  <!-- Subtle looping waveform -->
+  <svg id="waveform" viewBox="0 0 120 20" preserveAspectRatio="none" style="width: 100%; height: 30px; margin-top: 20px; opacity: 0.4;">
+    <path fill="none" stroke="#b07ea6" stroke-width="2" d="
+      M0 10
+      Q 10 5 20 10
+      T 40 10
+      T 60 10
+      T 80 10
+      T 100 10
+      T 120 10
+    ">
+      <animate attributeName="d" dur="3s" repeatCount="indefinite"
+        values="
+          M0 10 Q10 5 20 10 T40 10 T60 10 T80 10 T100 10 T120 10;
+          M0 10 Q10 15 20 10 T40 10 T60 10 T80 10 T100 10 T120 10;
+          M0 10 Q10 5 20 10 T40 10 T60 10 T80 10 T100 10 T120 10
+        "
+      />
+    </path>
+  </svg>
+
+</section>
+
+<script>
+  const audio = document.getElementById('audio-player');
+  const playPauseBtn = document.getElementById('play-pause');
+  const progressBar = document.getElementById('progress-bar');
+  const progressContainer = document.getElementById('progress-container');
+  const volumeSlider = document.getElementById('volume-slider');
+
+  // Play/pause toggle
+  playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = '⏸'; // pause symbol
+      playPauseBtn.setAttribute('aria-label', 'Pause');
+      playPauseBtn.title = 'Pause';
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = '▶'; // play symbol
+      playPauseBtn.setAttribute('aria-label', 'Play');
+      playPauseBtn.title = 'Play';
+    }
+  });
+
+  // Update progress bar
+  audio.addEventListener('timeupdate', () => {
+    if (audio.duration) {
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progressBar.style.width = progressPercent + '%';
+    }
+  });
+
+  // Seek on progress bar click
+  progressContainer.addEventListener('click', (e) => {
+    const rect = progressContainer.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const width = rect.width;
+    const clickPercent = clickX / width;
+    if (audio.duration) {
+      audio.currentTime = clickPercent * audio.duration;
+    }
+  });
+
+  // Volume control
+  volumeSlider.addEventListener('input', () => {
+    audio.volume = volumeSlider.value;
+  });
+
+  // Autoplay audio on load (if browser allows)
+  window.addEventListener('load', () => {
+    audio.volume = volumeSlider.value;
+    audio.play().then(() => {
+      playPauseBtn.textContent = '⏸';
+      playPauseBtn.setAttribute('aria-label', 'Pause');
+      playPauseBtn.title = 'Pause';
+    }).catch(() => {
+      // Autoplay blocked, keep play icon
+      playPauseBtn.textContent = '▶';
+      playPauseBtn.setAttribute('aria-label', 'Play');
+      playPauseBtn.title = 'Play';
+    });
+  });
+</script>
+
 
       <img id="listen-cover-art" alt="Album cover art" />
 

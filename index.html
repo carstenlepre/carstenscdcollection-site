@@ -374,19 +374,25 @@
   }
 
   async function fetchCoverArt(track) {
-  const cleanTitle = cleanTrackTitle(track);
   const [artist, title] = track.split(' - ').map(s => s.trim());
 
-
-  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=1`;
+  const url = `https://itunes.apple.com/search?term=${encodeURIComponent(artist)}+${encodeURIComponent(title)}&entity=song&limit=10`;
 
   try {
     const res = await fetch(url);
     const json = await res.json();
 
     if (json.resultCount > 0) {
-      return json.results[0].artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
+      // Try to find an exact artist match
+      const match = json.results.find(result =>
+        result.artistName.toLowerCase() === artist.toLowerCase()
+      );
+
+      const resultToUse = match || json.results[0];
+
+      return resultToUse.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
     }
+
     return null;
   } catch (e) {
     console.warn('Cover art fetch failed:', e);

@@ -380,6 +380,9 @@ async function fetchCoverArt(track, artist = null) {
     if (artist) {
         searchTerm += ` ${artist}`;
     }
+    else {
+        searchTerm += ` wigwamcenter`;
+    }
 
     const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=10`;
 

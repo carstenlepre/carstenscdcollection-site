@@ -236,6 +236,47 @@
       flex-wrap: wrap; /* allow buttons to wrap */
     }
   }
+
+  .custom-media-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  background: linear-gradient(90deg, #8e7db4 60%, #b07ea6 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 18px rgba(73,105,114,0.25);
+  padding: 0.7rem 1.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.custom-media-bar button {
+  background: #6a5a99;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2.6rem;
+  height: 2.6rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px #b07ea6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-media-bar button:hover {
+  background: #b07ea6;
+  transform: scale(1.1);
+}
+
+#volume-slider {
+  width: 110px;
+  accent-color: #d3a7e0;
+  background: transparent;
+  cursor: pointer;
+}
+
+
 </style>
 </head>
 <body>
@@ -260,19 +301,33 @@
     </section>
 
     <section id="listen" aria-label="Listen Now section">
-      <audio id="audio-player" controls autoplay>
-        <source src="https://eagle.streemlion.com/proxy/carsten?mp=/stream" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio>
+  <audio id="audio-player" src="https://eagle.streemlion.com/proxy/carsten?mp=/stream"></audio>
 
-      <img id="listen-cover-art" alt="Album cover art" />
+  <div class="custom-media-bar">
+  <button id="play-btn" aria-label="Play">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="#8e7db4"/>
+      <polygon points="11,8 22,14 11,20" fill="#fff"/>
+    </svg>
+  </button>
+  <button id="pause-btn" aria-label="Pause" style="display:none;">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="#8e7db4"/>
+      <rect x="10" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
+      <rect x="15" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
+    </svg>
+  </button>
+  <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
+</div>
 
-      <div class="now-playing-title">
-        Loading now playing...
-      </div>
+  <img id="listen-cover-art" alt="Album cover art" />
 
-      <ul class="recently-played-list"></ul>
-    </section>
+  <div class="now-playing-title">
+    Loading now playing...
+  </div>
+
+  <ul class="recently-played-list"></ul>
+</section>
 
     <section id="requests" aria-label="Requests and Call section">
       <h2>Send in your requests or song submissions below!</h2>
@@ -554,6 +609,47 @@ if (bestMatch) {
 
   fetchMetadata();
   setInterval(fetchMetadata, 15000);
+
+  const audio = document.getElementById('audio-player');
+const playBtn = document.getElementById('play-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const volumeSlider = document.getElementById('volume-slider');
+
+// Play
+playBtn.addEventListener('click', () => {
+  audio.play();
+  playBtn.style.display = 'none';
+  pauseBtn.style.display = 'inline-flex';
+});
+
+// Pause
+pauseBtn.addEventListener('click', () => {
+  audio.pause();
+  pauseBtn.style.display = 'none';
+  playBtn.style.display = 'inline-flex';
+});
+
+// Volume
+volumeSlider.addEventListener('input', () => {
+  audio.volume = volumeSlider.value;
+});
+
+// Update play/pause button on audio events
+audio.addEventListener('play', () => {
+  playBtn.style.display = 'none';
+  pauseBtn.style.display = 'inline-flex';
+});
+audio.addEventListener('pause', () => {
+  pauseBtn.style.display = 'none';
+  playBtn.style.display = 'inline-flex';
+});
+
+// Optional: Start playing automatically
+audio.volume = volumeSlider.value;
+audio.autoplay = true;
+
+
+
 </script>
 
 </body>

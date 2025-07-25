@@ -276,6 +276,15 @@
   cursor: pointer;
 }
 
+#about h2,
+#requests h2 {
+  text-shadow: none !important;
+}
+
+/* .custom-media-bar button#volume-icon {
+  margin-left: -2px;
+} */
+
 
 </style>
 </head>
@@ -295,7 +304,7 @@
 
   <main id="content">
     <section id="home" class="active" aria-label="Home section">
-      <img id="home-cover-art" alt="Album cover art" />
+      <img id="home-cover-art" alt="Album cover art" crossOrigin="anonymous" />
       <div class="now-playing-title">Loading now playing...</div>
       <ul class="recently-played-list"></ul>
     </section>
@@ -317,10 +326,17 @@
       <rect x="15" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
     </svg>
   </button>
+  <button id="volume-icon" aria-label="Mute/Unmute" type="button">
+  <svg id="volume-svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <circle cx="14" cy="14" r="14" fill="#8e7db4"/>
+    <polygon id="volume-body" points="5,12 9,12 13,8 13,20 9,16 5,16" fill="#fff"/>
+    <g id="volume-waves"></g>
+  </svg>
+</button>
   <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
 </div>
 
-  <img id="listen-cover-art" alt="Album cover art" />
+  <img id="listen-cover-art" alt="Album cover art" crossOrigin="anonymous" />
 
   <div class="now-playing-title">
     Loading now playing...
@@ -358,7 +374,6 @@
   <h2 style="
     font-size: 2.5rem; 
     color: #e4d7f5; 
-    text-shadow: 0 0 12px #856b9d; 
     margin-bottom: 1rem; 
     text-align: center;
   ">
@@ -374,7 +389,6 @@
   <h2 style="
     font-size: 2rem; 
     color: #e4d7f5; 
-    text-shadow: 0 0 12px #856b9d; 
     margin-bottom: 1rem; 
     text-align: center;
   ">
@@ -487,17 +501,17 @@ if (normalizedSearchArtist && resultArtist.includes(normalizedSearchArtist)) {
 // Penalize albums with junk keywords
 const badAlbumKeywords = [
   'greatest hits', 'deluxe', 'remaster', 'tribute',
-  'karaoke', 'single', 'soundtrack', 'voice performance'
+  'karaoke', 'single', 'soundtrack', 'voice performance', 'best of', 'compilation', 'live',
 ];
 const albumName = result.collectionName.toLowerCase();
 if (badAlbumKeywords.some(keyword => albumName.includes(keyword))) {
   score -= 2;
 }
 
-  console.log(`  [${index + 1}] "${result.trackName}" by "${result.artistName}"`);
-  console.log(`       → Normalized title: "${resultTitle}"`);
-  console.log(`       → Normalized artist: "${resultArtist}"`);
-  console.log(`       → Match score: ${score}`);
+  //console.log(`  [${index + 1}] "${result.trackName}" by "${result.artistName}"`);
+  //console.log(`       → Normalized title: "${resultTitle}"`);
+  //console.log(`       → Normalized artist: "${resultArtist}"`);
+  //console.log(`       → Match score: ${score}`);
 
   if (score > bestScore) {
     bestScore = score;
@@ -506,7 +520,7 @@ if (badAlbumKeywords.some(keyword => albumName.includes(keyword))) {
 });
 
 if (bestMatch) {
-  console.log(`✅ [CoverArt] Selected: "${bestMatch.trackName}" by "${bestMatch.artistName}" (score: ${bestScore})`);
+  //console.log(`✅ [CoverArt] Selected: "${bestMatch.trackName}" by "${bestMatch.artistName}" (score: ${bestScore})`);
   return bestMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
 }
 
@@ -567,6 +581,7 @@ if (bestMatch) {
         if (coverArtListen) {
           coverArtListen.src = coverUrl;
           coverArtListen.style.opacity = '1';
+          setBackgroundFromCover(coverArtListen);
         }
         if (coverArtHome) {
           coverArtHome.src = coverUrl;
@@ -578,12 +593,13 @@ if (bestMatch) {
         if (coverArtListen) {
           coverArtListen.src = coverUrl;
           coverArtListen.style.opacity = '1';
+          setBackgroundFromCover(coverArtListen);
         }
         if (coverArtHome) {
           coverArtHome.src = coverUrl;
           coverArtHome.style.opacity = '1';
         }
-      }, 0000); // 4 second delay for future updates
+      }, 0); // 0 second delay for future updates
     } else {
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
@@ -648,9 +664,232 @@ audio.addEventListener('pause', () => {
 audio.volume = volumeSlider.value;
 audio.autoplay = true;
 
+const volumeIcon = document.getElementById('volume-icon');
+const volumeSVG = document.getElementById('volume-svg');
+const volumeWavesGroup = document.getElementById('volume-waves');
 
+function updateVolumeIcon() {
+  // Clear previous waves
+  volumeWavesGroup.innerHTML = '';
+
+  if (audio.paused || audio.volume === 0) {
+    // Draw an "X" for muted (shifted left by 10)
+    volumeWavesGroup.innerHTML = `
+      <line x1="16" y1="10" x2="22" y2="18" stroke="#fff" stroke-width="2"/>
+      <line x1="22" y1="10" x2="16" y2="18" stroke="#fff" stroke-width="2"/>
+    `;
+  } else if (audio.volume > 0 && audio.volume <= 0.33) {
+    // One wave (shrunk by half)
+    volumeWavesGroup.innerHTML = `
+      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+    `;
+  } else if (audio.volume > 0.33 && audio.volume <= 0.66) {
+    // Two waves (shrunk by half)
+    volumeWavesGroup.innerHTML = `
+      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <path d="M16.5 10.5 Q22 13.75 16.5 17.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+    `;
+  } else {
+    // Three waves (shrunk by half)
+    volumeWavesGroup.innerHTML = `
+      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <path d="M16.5 10.5 Q22 13.75 16.5 17.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+      <path d="M19.5 9.5 Q24.25 13.75 19.5 18.5" stroke="#fff" stroke-width="1.5" fill="none"/>
+    `;
+  }
+}
+
+// Clicking the icon toggles mute/unmute
+volumeIcon.addEventListener('click', () => {
+  if (audio.volume > 0) {
+    audio.volume = 0;
+    volumeSlider.value = 0;
+  } else {
+    audio.volume = 1;
+    volumeSlider.value = 1;
+  }
+  updateVolumeIcon();
+});
+
+// Update icon on play/pause/volume change
+audio.addEventListener('play', updateVolumeIcon);
+audio.addEventListener('pause', updateVolumeIcon);
+volumeSlider.addEventListener('input', updateVolumeIcon);
+audio.addEventListener('volumechange', updateVolumeIcon);
+
+// Initial state
+updateVolumeIcon();
+
+// Helper to convert [r,g,b] to hex
+function rgbToHex(rgb) {
+  return "#" + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+// Store your default background
+const defaultBackground = "linear-gradient(135deg, #496972, #b07ea6)";
+
+function getLuminance(hex) {
+  // Remove "#" if present
+  hex = hex.replace(/^#/, '');
+  // Parse r, g, b
+  let r = parseInt(hex.substr(0,2),16) / 255;
+  let g = parseInt(hex.substr(2,2),16) / 255;
+  let b = parseInt(hex.substr(4,2),16) / 255;
+  // Standard luminance formula
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+// This function sets the background based on the album art
+function lightenDarkenColor(hex, amt) {
+  // amt: positive to lighten, negative to darken
+  let usePound = false;
+  if (hex[0] === "#") {
+    hex = hex.slice(1);
+    usePound = true;
+  }
+  let num = parseInt(hex,16);
+  let r = (num >> 16) + amt;
+  let g = ((num >> 8) & 0x00FF) + amt;
+  let b = (num & 0x0000FF) + amt;
+  r = Math.max(Math.min(255, r), 0);
+  g = Math.max(Math.min(255, g), 0);
+  b = Math.max(Math.min(255, b), 0);
+  return (usePound ? "#" : "") + (r << 16 | g << 8 | b).toString(16).padStart(6, '0');
+}
+
+function setBackgroundFromCover(img) {
+  const colorThief = new ColorThief();
+
+  if (img.complete && img.naturalHeight !== 0 && !img.src.includes('SKEYAYe.png')) {
+    try {
+      const dominant = colorThief.getColor(img);
+      const palette = colorThief.getPalette(img, 3);
+
+      const color1 = rgbToHex(dominant);
+      const color2 = rgbToHex(palette[1] || dominant);
+      const color3 = rgbToHex(palette[2] || dominant);
+
+      // Calculate luminance of dominant color
+      const luminance = getLuminance(color1);
+
+      // If background is dark, buttons are lighter; if light, buttons are darker
+      const contrastAmt = 100;
+      let lighter1, lighter2, darker1, darker2;
+      if (luminance < 0.5) {
+        lighter1 = lightenDarkenColor(color1, contrastAmt);
+        lighter2 = lightenDarkenColor(color2, contrastAmt);
+        darker1 = lightenDarkenColor(color1, contrastAmt);
+        darker2 = lightenDarkenColor(color2, contrastAmt);
+      } else {
+        lighter1 = lightenDarkenColor(color1, -contrastAmt);
+        lighter2 = lightenDarkenColor(color2, -contrastAmt);
+        darker1 = lightenDarkenColor(color1, -contrastAmt);
+        darker2 = lightenDarkenColor(color2, -contrastAmt);
+      }
+
+      // Set all text to white/black except the title
+      const textColor = luminance < 0.5 ? "#222" : "#fff";
+      //const textShadow = luminance < 0.5
+      //  ? "0 1px 3px #a1cee8, 0 0px 1px #a1cee8"
+      //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";
+
+      document.querySelectorAll('body *:not(h1)').forEach(el => {
+        // Only set color if it's not a nav/media bar button (already handled above)
+        if (
+          !el.classList.contains('nav-btn') &&
+          !el.closest('.custom-media-bar')
+        ) {
+          el.style.color = textColor;
+          //el.style.textShadow = textShadow;
+          el.style.fontWeight = "bold";
+        }
+      });
+
+      // Set background
+      document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
+
+      // Nav buttons: strong contrast
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
+        btn.style.boxShadow = `0 0 6px ${darker2}`;
+        btn.style.color = luminance < 0.5 ? "#222" : "#fff";
+      });
+
+      // Media bar: strong contrast
+      document.querySelectorAll('.custom-media-bar').forEach(bar => {
+        bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
+        bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
+      });
+
+      // Play, pause, mute/unmute buttons: single color
+      document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
+        btn.style.background = darker2;
+        btn.style.boxShadow = `0 2px 8px ${darker1}`;
+        btn.style.color = luminance < 0.5 ? "#222" : "#fff";
+      });
+
+      // Volume slider bar: single color (accent)
+      const slider = document.getElementById('volume-slider');
+      if (slider) {
+        slider.style.accentColor = darker2;
+      }
+
+    } catch (e) {
+      resetDynamicColors();
+    }
+  } else {
+    resetDynamicColors();
+  }
+}
+
+// Helper to reset dynamic colors to your default scheme
+function resetDynamicColors() {
+  // Body background
+  document.body.style.background = "linear-gradient(135deg, #496972, #b07ea6)";
+  // Reset all text to default except the title
+  document.querySelectorAll('body *:not(h1)').forEach(el => {
+    if (
+      !el.classList.contains('nav-btn') &&
+      !el.closest('.custom-media-bar')
+    ) {
+      el.style.color = "";
+    }
+  });
+  document.querySelectorAll('body *:not(h1)').forEach(el => {
+    if (
+      !el.classList.contains('nav-btn') &&
+      !el.closest('.custom-media-bar')
+    ) {
+      el.style.color = "";
+      el.style.textShadow = "";
+      el.style.fontWeight = "";
+    }
+  });
+
+  // Nav buttons
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.style.background = "linear-gradient(45deg, #8e7db4, #b07ea6)";
+    btn.style.boxShadow = "0 0 6px #b07ea6";
+  });
+
+  // Media bar
+  document.querySelectorAll('.custom-media-bar').forEach(bar => {
+    bar.style.background = "linear-gradient(90deg, #8e7db4 60%, #b07ea6 100%)";
+    bar.style.boxShadow = "0 4px 18px rgba(73,105,114,0.25)";
+  });
+
+  // Media bar buttons
+  document.querySelectorAll('.custom-media-bar button').forEach(btn => {
+    btn.style.background = "#6a5a99";
+    btn.style.boxShadow = "0 2px 8px #b07ea6";
+  });
+}
+
+  
 
 </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
 
 </body>
 </html>

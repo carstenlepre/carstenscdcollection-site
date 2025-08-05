@@ -307,6 +307,49 @@
       <img id="home-cover-art" alt="Album cover art" crossOrigin="anonymous" />
       <div class="now-playing-title">Loading now playing...</div>
       <ul class="recently-played-list"></ul>
+
+      <style>
+  .support-buttons {
+    text-align: center;
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .support-buttons div {
+    cursor: pointer;
+  }
+  .support-buttons p {
+    margin: 0 0 0.3em;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+  }
+  .support-buttons a img {
+    height: 45px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .support-buttons a:hover img {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+</style>
+
+<div class="support-buttons">
+  <div>
+    <p>Help keep the station up and running :)</p>
+    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+    </a>
+  </div>
+  <div>
+    <p>Join our Discord community!</p>
+    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+    </a>
+  </div>
+</div>
     </section>
 
     <section id="listen" aria-label="Listen Now section">
@@ -343,6 +386,49 @@
   </div>
 
   <ul class="recently-played-list"></ul>
+
+  <style>
+  .support-buttons {
+    text-align: center;
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .support-buttons div {
+    cursor: pointer;
+  }
+  .support-buttons p {
+    margin: 0 0 0.3em;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+  }
+  .support-buttons a img {
+    height: 45px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .support-buttons a:hover img {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+</style>
+
+<div class="support-buttons">
+  <div>
+    <p>Help keep the station up and running :)</p>
+    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+    </a>
+  </div>
+  <div>
+    <p>Join our Discord community!</p>
+    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+    </a>
+  </div>
+</div>    
 </section>
 
     <section id="requests" aria-label="Requests and Call section">
@@ -362,11 +448,12 @@
       <p>For scheduling, you’ll find the dates and times that the station is live on the station’s Instagram page: <a href="https://instagram.com/carstenscdradio" target="_blank" rel="noopener">@carstenscdradio</a>, but you can also follow my main page <a href="https://instagram.com/carstenlepre8" target="_blank" rel="noopener">@carstenlepre8</a>.</p>
       <p>Visit the Request/Call page on the website for info about submitting your own original music or sending in your favorite song requests. There you will find various methods to reach me/the station. Hope you enjoy!</p>
 
-     <div style="text-align: center; margin-top: 2em;">
-  <p>Help keep the station up and running :)</p>
-  <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
-    <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 45px;">
-  </a>
+       <div>
+    <p>Join our Discord community!</p>
+    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+    </a>
+  </div>
 </div>
     </section>
 
@@ -392,7 +479,7 @@
     margin-bottom: 1rem; 
     text-align: center;
   ">
-    Upcoming Events
+    Events
   </h2>
 
   <p style="text-align: center; font-size: 1.1rem; color: #dcdde1; margin-bottom: 2rem;">
@@ -810,43 +897,43 @@ function setBackgroundFromCover(img) {
       });
 
       // Set background
-      document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
+document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
 
-      document.querySelectorAll('.now-playing-title').forEach(el => {
-        el.style.textShadow = "none";
-      });
+document.querySelectorAll('.now-playing-title').forEach(el => {
+  el.style.textShadow = "none";
+});
 
-      document.querySelectorAll('.recently-played-list').forEach(list => {
-        list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
-        list.style.color = luminance > 0.5 ? "#222" : "#fff";
-        list.style.boxShadow = `0 2px 8px ${darker2}`;
-      });
+document.querySelectorAll('.recently-played-list').forEach(list => {
+  list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
+  list.style.color = luminance > 0.5 ? "#222" : "#fff";
+  list.style.boxShadow = `0 2px 8px ${darker2}`;
+});
 
-      // Nav buttons: strong contrast
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
-        btn.style.boxShadow = `0 0 6px ${darker2}`;
-        btn.style.color = luminance < 0.5 ? "#222" : "#fff";
-      });
+// Nav buttons: strong contrast
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
+  btn.style.boxShadow = `0 0 6px ${darker2}`;
+  btn.style.color = luminance < 0.5 ? "#222" : "#fff";
+});
 
-      // Media bar: strong contrast
-      document.querySelectorAll('.custom-media-bar').forEach(bar => {
-        bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
-        bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
-      });
+// Media bar: strong contrast
+document.querySelectorAll('.custom-media-bar').forEach(bar => {
+  bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
+  bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
+});
 
-      // Play, pause, mute/unmute buttons: single color
-      document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
-        btn.style.background = darker2;
-        btn.style.boxShadow = `0 2px 8px ${darker1}`;
-        btn.style.color = luminance < 0.5 ? "#222" : "#fff";
-      });
+// Play, pause, mute/unmute buttons: single color
+document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
+  btn.style.background = darker2;
+  btn.style.boxShadow = `0 2px 8px ${darker1}`;
+  btn.style.color = luminance < 0.5 ? "#222" : "#fff";
+});
 
-      // Volume slider bar: single color (accent)
-      const slider = document.getElementById('volume-slider');
-      if (slider) {
-        slider.style.accentColor = darker2;
-      }
+// Volume slider bar: single color (accent)
+const slider = document.getElementById('volume-slider');
+if (slider) {
+  slider.style.accentColor = darker2;
+}
 
     } catch (e) {
       resetDynamicColors();

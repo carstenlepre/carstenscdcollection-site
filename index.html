@@ -358,7 +358,7 @@
     <section id="listen" aria-label="Listen Now section">
   <audio id="audio-player" src="https://eagle.streemlion.com/proxy/carsten?mp=/stream"></audio>
 
-  <div class="custom-media-bar">
+<div class="custom-media-bar">
   <button id="play-btn" aria-label="Play">
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
       <circle cx="14" cy="14" r="14" fill="#222"/>
@@ -372,21 +372,27 @@
       <rect x="15" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
     </svg>
   </button>
+
+  <!-- Mute/Unmute Button -->
   <button id="volume-icon" aria-label="Mute/Unmute" type="button">
-  <svg id="volume-svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <circle cx="14" cy="14" r="14" fill="#222"/>
-    <polygon id="volume-body" points="5,12 9,12 13,8 13,20 9,16 5,16" fill="#fff"/>
-    <g id="volume-waves"></g>
-  </svg>
-</button>
-  <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
+    <svg id="volume-svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+      <circle cx="14" cy="14" r="14" fill="#222"/>
+      <polygon id="volume-body" points="5,12 9,12 13,8 13,20 9,16 5,16" fill="#fff"/>
+      <g id="volume-waves" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path id="wave1" d="M18 11c1.5 1.5 1.5 5 0 6.5"/>
+        <path id="wave2" d="M20.5 8.5c3 3 3 7.5 0 10.5"/>
+      </g>
+      <line id="mute-cross1" x1="19" y1="9" x2="23" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round" style="display:none"/>
+      <line id="mute-cross2" x1="23" y1="9" x2="19" y2="13" stroke="#fff" stroke-width="2" stroke-linecap="round" style="display:none"/>
+    </svg>
+  </button>
 </div>
 
-  <img id="listen-cover-art" alt="Album cover art" crossOrigin="anonymous" />
+<img id="listen-cover-art" alt="Album cover art" crossOrigin="anonymous" />
 
-  <div class="now-playing-title">
-    Loading now playing...
-  </div>
+<div class="now-playing-title">
+  Loading now playing...
+</div>
 
   <ul class="recently-played-list"></ul>
 
@@ -953,43 +959,60 @@ document.querySelectorAll('.now-playing-title').forEach(el => {
 });
 
 document.querySelectorAll('.recently-played-list').forEach(list => {
-  list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
+  // Add alpha to colors for a smoother fade
+  const smoothGradient = `linear-gradient(90deg, ${lighter1}cc, ${lighter2}aa)`;
+  list.style.background = smoothGradient;
+  
+  // Reduce shadow opacity and blur for gentler effect
+  list.style.boxShadow = `0 2px 6px ${darker2}66`;
+  
+  // Text color stays dynamic based on luminance
   list.style.color = luminance > 0.5 ? "#222" : "#fff";
-  list.style.boxShadow = `0 2px 8px ${darker2}`;
 });
+
 
 // Nav buttons: strong contrast
 document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
-  btn.style.boxShadow = `0 0 6px ${darker2}`;
+// Use less contrast by blending dominant with lighter color for smoother gradient
+  const softGradient = `linear-gradient(45deg, ${color1}aa, ${lighter2}cc)`;
+  btn.style.background = softGradient;
+  
+  // Reduce shadow intensity and spread for subtler glow
+  btn.style.boxShadow = `0 0 3px ${darker2}88`;
+  
+  // Keep text color same
   btn.style.color = luminance < 0.5 ? "#222" : "#fff";
 });
 
-// Media bar: strong contrast
+
+// Media bar: softer gradient and subtle shadow
 document.querySelectorAll('.custom-media-bar').forEach(bar => {
-  bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
-  bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
+  // Blend dominant color with a lighter one, add alpha for softness
+  const softGradient = `linear-gradient(90deg, ${color1}aa 60%, ${lighter2}cc 100%)`;
+  bar.style.background = softGradient;
+  
+  // Subtle shadow, reduced intensity and spread
+  bar.style.boxShadow = `0 4px 12px ${darker1}66`;
 });
 
-// Play, pause, mute/unmute buttons: single color
+// Play, pause, mute/unmute buttons: softened background and shadow
 document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
-  btn.style.background = darker2;
-  btn.style.boxShadow = `0 2px 8px ${darker1}`;
+  // Use darker2 but with some transparency for a softer background
+  btn.style.background = `${darker2}cc`; // adding alpha to darken2
+  
+  // Subtle, less intense shadow
+  btn.style.boxShadow = `0 2px 6px ${darker1}88`;
+  
+  // Keep text color consistent
   btn.style.color = luminance < 0.5 ? "#222" : "#fff";
 });
 
-// Volume slider bar: single color (accent)
+
+// Volume slider bar: softened accent color
 const slider = document.getElementById('volume-slider');
 if (slider) {
-  slider.style.accentColor = darker2;
-}
-
-    } catch (e) {
-      resetDynamicColors();
-    }
-  } else {
-    resetDynamicColors();
-  }
+  // Add some transparency to darken2 for a gentler accent
+  slider.style.accentColor = `${darker2}cc`;
 }
 
 // Helper to reset dynamic colors to your default scheme
@@ -1040,6 +1063,56 @@ function resetDynamicColors() {
 </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const audio = document.querySelector('audio'); // Your audio element
+    const volumeBtn = document.getElementById('volume-icon');
+    const volumeBody = volumeBtn.querySelector('#volume-body');
+
+    volumeBtn.addEventListener('click', () => {
+      if (!audio) return;
+
+      audio.muted = !audio.muted;
+
+      if (audio.muted) {
+        volumeBody.setAttribute('fill', '#888'); // muted gray
+      } else {
+        volumeBody.setAttribute('fill', '#fff'); // unmuted white
+      }
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const volumeBtn = document.getElementById('volume-icon');
+    const audio = document.querySelector('audio'); // Make sure you have your audio element somewhere
+
+    const waveGroup = document.getElementById('volume-waves');
+    const muteCross1 = document.getElementById('mute-cross1');
+    const muteCross2 = document.getElementById('mute-cross2');
+
+    // Initialize unmuted
+    audio.muted = false;
+
+    volumeBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+
+      if (audio.muted) {
+        waveGroup.style.display = 'none';
+        muteCross1.style.display = 'inline';
+        muteCross2.style.display = 'inline';
+        volumeBtn.setAttribute('aria-label', 'Unmute');
+      } else {
+        waveGroup.style.display = 'inline';
+        muteCross1.style.display = 'none';
+        muteCross2.style.display = 'none';
+        volumeBtn.setAttribute('aria-label', 'Mute');
+      }
+    });
+  });
+</script>
 
 </body>
 </html>

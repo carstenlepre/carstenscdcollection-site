@@ -915,7 +915,7 @@ function setBackgroundFromCover(img) {
       // If background is dark, buttons are lighter; if light, buttons are darker
       const contrastAmt = 100;
       let lighter1, lighter2, darker1, darker2;
-      if (luminance < 0.6) {
+      if (luminance < 0.75) {
         lighter1 = lightenDarkenColor(color1, contrastAmt);
         lighter2 = lightenDarkenColor(color2, contrastAmt);
         darker1 = lightenDarkenColor(color1, contrastAmt);
@@ -928,7 +928,7 @@ function setBackgroundFromCover(img) {
       }
 
       // Set all text to white/black except the title
-      const textColor = luminance < 0.6 ? "#222" : "#fff";
+      const textColor = luminance < 0.75 ? "#222" : "#fff";
       //const textShadow = luminance < 0.6
       //  ? "0 1px 3px #a1cee8, 0 0px 1px #a1cee8"
       //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";

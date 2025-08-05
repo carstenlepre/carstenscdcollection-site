@@ -316,18 +316,21 @@
     justify-content: center;
     gap: 1.5em;
     align-items: center;
-    flex-wrap: wrap;
   }
   .support-buttons div {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .support-buttons p {
     margin: 0 0 0.3em;
     font-weight: 600;
     font-family: Arial, sans-serif;
+    font-size: 0.9rem;
   }
   .support-buttons a img {
-    height: 45px;
+    height: 31.5px; /* 45px * 0.7 = 31.5px */
     transition: transform 0.3s ease, filter 0.3s ease;
   }
   .support-buttons a:hover img {
@@ -395,18 +398,21 @@
     justify-content: center;
     gap: 1.5em;
     align-items: center;
-    flex-wrap: wrap;
   }
   .support-buttons div {
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   .support-buttons p {
     margin: 0 0 0.3em;
     font-weight: 600;
     font-family: Arial, sans-serif;
+    font-size: 0.9rem;
   }
   .support-buttons a img {
-    height: 45px;
+    height: 31.5px; /* 45px * 0.7 = 31.5px */
     transition: transform 0.3s ease, filter 0.3s ease;
   }
   .support-buttons a:hover img {
@@ -428,7 +434,7 @@
       <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
     </a>
   </div>
-</div>    
+</div>
 </section>
 
     <section id="requests" aria-label="Requests and Call section">
@@ -438,6 +444,53 @@
       <p>Instagram: <a href="https://instagram.com/carstenscdradio" target="_blank" rel="noopener">@carstenscdradio</a></p>
       <p>Besides requests for your favorite songs, I also accept original song submissions! Email or DM the file for airtime.</p>
       <p class="note">*Please note that my library of songs is based on my actual CD collection—I might not have what you request.*</p>
+
+      <style>
+  .support-buttons {
+    text-align: center;
+    margin-top: 2em;
+    display: flex;
+    justify-content: center;
+    gap: 1.5em;
+    align-items: center;
+  }
+  .support-buttons div {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .support-buttons p {
+    margin: 0 0 0.3em;
+    font-weight: 600;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+  }
+  .support-buttons a img {
+    height: 31.5px; /* 45px * 0.7 = 31.5px */
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+  .support-buttons a:hover img {
+    transform: scale(1.1);
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  }
+</style>
+
+<div class="support-buttons">
+  <div>
+    <p>Help keep the station up and running :)</p>
+    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
+      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee">
+    </a>
+  </div>
+  <div>
+    <p>Join our Discord community!</p>
+    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
+      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
+    </a>
+  </div>
+</div>
+
     </section>
 
     <section id="about" aria-label="About section">

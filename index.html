@@ -934,16 +934,25 @@ function setBackgroundFromCover(img) {
       //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";
 
       document.querySelectorAll('body *:not(h1)').forEach(el => {
-        // Only set color if it's not a nav/media bar button (already handled above)
-        if (
-          !el.classList.contains('nav-btn') &&
-          !el.closest('.custom-media-bar')
-        ) {
-          el.style.color = textColor;
-          //el.style.textShadow = textShadow;
-          el.style.fontWeight = "bold";
-        }
-      });
+  if (
+    !el.classList.contains('nav-btn') &&
+    !el.closest('.custom-media-bar')
+  ) {
+    el.style.color = textColor;
+    el.style.fontWeight = "bold";
+  }
+});
+
+const h1 = document.querySelector('h1');
+if (h1) {
+  h1.style.color = textColor;
+  h1.style.textShadow = `
+    0 2px 4px rgba(0, 0, 0, 0.75),
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    2px 2px 6px rgba(0, 0, 0, 0.3)
+  `;
+  h1.style.transition = "all 0.3s ease-in-out";
+}
 
       // Set background
 document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;

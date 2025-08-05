@@ -928,7 +928,7 @@ function setBackgroundFromCover(img) {
       }
 
       // Set all text to white/black except the title
-      const textColor = luminance < 0.5 ? "#222" : "#fff";
+      const textColor = luminance > 0.4 ? "#222" : "#fff";
       //const textShadow = luminance < 0.5
       //  ? "0 1px 3px #a1cee8, 0 0px 1px #a1cee8"
       //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";

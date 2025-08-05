@@ -768,8 +768,10 @@ const pauseBtn = document.getElementById('pause-btn');
 const volumeSlider = document.getElementById('volume-slider');
 
 // Play
+let volumeEnabled = false;
 playBtn.addEventListener('click', () => {
   audio.play();
+  volumeEnabled = true;
   playBtn.style.display = 'none';
   pauseBtn.style.display = 'inline-flex';
 });
@@ -783,7 +785,9 @@ pauseBtn.addEventListener('click', () => {
 
 // Volume
 volumeSlider.addEventListener('input', () => {
-  audio.volume = volumeSlider.value;
+  if (volumeEnabled) {
+    audio.volume = volumeSlider.value;
+  }
 });
 
 // Update play/pause button on audio events
@@ -1039,5 +1043,9 @@ function resetDynamicColors() {
 
 </body>
 </html>
+
+
+
+
 
 

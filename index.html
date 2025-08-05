@@ -865,41 +865,36 @@ function rgbToHex(rgb) {
   return "#" + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
-// Helper: convert hex to [r,g,b]
-function hexToRgb(hex) {
-  hex = hex.replace(/^#/, '');
-  return [
-    parseInt(hex.substr(0, 2), 16),
-    parseInt(hex.substr(2, 2), 16),
-    parseInt(hex.substr(4, 2), 16)
-  ];
-}
+// Store your default background
+const defaultBackground = "linear-gradient(135deg, #496972, #b07ea6)";
 
-// Calculate luminance from hex color (0=black, 1=white)
 function getLuminance(hex) {
-  let [r, g, b] = hexToRgb(hex);
-  r /= 255; g /= 255; b /= 255;
-  r = r <= 0.03928 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
-  g = g <= 0.03928 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
-  b = b <= 0.03928 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+  // Remove "#" if present
+  hex = hex.replace(/^#/, '');
+  // Parse r, g, b
+  let r = parseInt(hex.substr(0,2),16) / 255;
+  let g = parseInt(hex.substr(2,2),16) / 255;
+  let b = parseInt(hex.substr(4,2),16) / 255;
+  // Standard luminance formula
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-// Lighten or darken a hex color by amt (-255 to +255)
+// This function sets the background based on the album art
 function lightenDarkenColor(hex, amt) {
+  // amt: positive to lighten, negative to darken
   let usePound = false;
   if (hex[0] === "#") {
     hex = hex.slice(1);
     usePound = true;
   }
-  let num = parseInt(hex, 16);
+  let num = parseInt(hex,16);
   let r = (num >> 16) + amt;
   let g = ((num >> 8) & 0x00FF) + amt;
   let b = (num & 0x0000FF) + amt;
   r = Math.max(Math.min(255, r), 0);
   g = Math.max(Math.min(255, g), 0);
   b = Math.max(Math.min(255, b), 0);
-  return (usePound ? "#" : "") + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
+  return (usePound ? "#" : "") + (r << 16 | g << 8 | b).toString(16).padStart(6, '0');
 }
 
 function setBackgroundFromCover(img) {
@@ -915,103 +910,87 @@ function setBackgroundFromCover(img) {
       const color3 = rgbToHex(palette[2] || dominant);
 
       // Calculate luminance of dominant color
-      let luminance = getLuminance(color1);
+      const luminance = getLuminance(color1);
 
-      // Clamp brightness so background never gets too light or dark
-      let safeColor1 = color1;
-      if (luminance > 0.9) {
-        safeColor1 = lightenDarkenColor(color1, -40);
-        luminance = getLuminance(safeColor1);
-      } else if (luminance < 0.1) {
-        safeColor1 = lightenDarkenColor(color1, 40);
-        luminance = getLuminance(safeColor1);
-      }
-
-      // Adjust other colors in palette similarly for harmony
-      let safeColor2 = color2;
-      if (getLuminance(color2) > 0.9) safeColor2 = lightenDarkenColor(color2, -40);
-      else if (getLuminance(color2) < 0.1) safeColor2 = lightenDarkenColor(color2, 40);
-
-      let safeColor3 = color3;
-      if (getLuminance(color3) > 0.9) safeColor3 = lightenDarkenColor(color3, -40);
-      else if (getLuminance(color3) < 0.1) safeColor3 = lightenDarkenColor(color3, 40);
-
-      // Decide lighten/darken amount for accents based on luminance
+      // If background is dark, buttons are lighter; if light, buttons are darker
       const contrastAmt = 100;
       let lighter1, lighter2, darker1, darker2;
       if (luminance < 0.75) {
-        lighter1 = lightenDarkenColor(safeColor1, contrastAmt);
-        lighter2 = lightenDarkenColor(safeColor2, contrastAmt);
-        darker1 = lightenDarkenColor(safeColor1, contrastAmt);
-        darker2 = lightenDarkenColor(safeColor2, contrastAmt);
+        lighter1 = lightenDarkenColor(color1, contrastAmt);
+        lighter2 = lightenDarkenColor(color2, contrastAmt);
+        darker1 = lightenDarkenColor(color1, contrastAmt);
+        darker2 = lightenDarkenColor(color2, contrastAmt);
       } else {
-        lighter1 = lightenDarkenColor(safeColor1, -contrastAmt);
-        lighter2 = lightenDarkenColor(safeColor2, -contrastAmt);
-        darker1 = lightenDarkenColor(safeColor1, -contrastAmt);
-        darker2 = lightenDarkenColor(safeColor2, -contrastAmt);
+        lighter1 = lightenDarkenColor(color1, -contrastAmt);
+        lighter2 = lightenDarkenColor(color2, -contrastAmt);
+        darker1 = lightenDarkenColor(color1, -contrastAmt);
+        darker2 = lightenDarkenColor(color2, -contrastAmt);
       }
 
-      // Set text color (dark text on light bg, white text on dark bg)
+      // Set all text to white/black except the title
       const textColor = luminance > 0.75 ? "#222" : "#fff";
+      //const textShadow = luminance < 0.6
+      //  ? "0 1px 3px #a1cee8, 0 0px 1px #a1cee8"
+      //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";
 
-      // Style all text except h1
       document.querySelectorAll('body *:not(h1)').forEach(el => {
-        if (!el.classList.contains('nav-btn') && !el.closest('.custom-media-bar')) {
-          el.style.color = textColor;
-          el.style.fontWeight = "bold";
-          // You can uncomment textShadow here if you want subtle effect
-          // el.style.textShadow = luminance < 0.6 ? "0 1px 3px #a1cee8" : "";
-        }
-      });
+if (
+    !el.classList.contains('nav-btn') &&
+    !el.closest('.custom-media-bar')
+  ) {
+    el.style.color = textColor;
+    el.style.fontWeight = "bold";
+  }
+});
 
-      // Style h1 separately for extra pop
-      const h1 = document.querySelector('h1');
-      if (h1) {
-        h1.style.color = textColor;
-        h1.style.textShadow = `
-          0 2px 4px rgba(0, 0, 0, 0.75),
-          0 4px 10px rgba(0, 0, 0, 0.5),
-          2px 2px 6px rgba(0, 0, 0, 0.3)
-        `;
-        h1.style.transition = "all 0.3s ease-in-out";
-      }
+const h1 = document.querySelector('h1');
+if (h1) {
+  h1.style.color = textColor;
+  h1.style.textShadow = `
+    0 2px 4px rgba(0, 0, 0, 0.75),
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    2px 2px 6px rgba(0, 0, 0, 0.3)
+  `;
+  h1.style.transition = "all 0.3s ease-in-out";
+}
+      // Set background
+document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
 
-      // Set background gradient with clamped colors
-      document.body.style.transition = "background 0.6s ease";
-      document.body.style.background = `linear-gradient(135deg, ${safeColor1}, ${safeColor2}, ${safeColor3})`;
+document.querySelectorAll('.now-playing-title').forEach(el => {
+  el.style.textShadow = "none";
+});
 
-      // Style other UI elements with gradients and shadows for contrast
-      document.querySelectorAll('.now-playing-title').forEach(el => {
-        el.style.textShadow = "none";
-      });
+document.querySelectorAll('.recently-played-list').forEach(list => {
+  list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
+  list.style.color = luminance > 0.6 ? "#222" : "#fff";
+  list.style.boxShadow = `0 2px 8px ${darker2}`;
+});
 
-      document.querySelectorAll('.recently-played-list').forEach(list => {
-        list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
-        list.style.color = luminance > 0.6 ? "#222" : "#fff";
-        list.style.boxShadow = `0 2px 8px ${darker2}`;
-      });
+// Nav buttons: strong contrast
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
+  btn.style.boxShadow = `0 0 6px ${darker2}`;
+  btn.style.color = luminance < 0.6 ? "#222" : "#fff";
+});
 
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
-        btn.style.boxShadow = `0 0 6px ${darker2}`;
-        btn.style.color = luminance < 0.6 ? "#222" : "#fff";
-      });
+// Media bar: strong contrast
+document.querySelectorAll('.custom-media-bar').forEach(bar => {
+  bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
+  bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
+});
 
-      document.querySelectorAll('.custom-media-bar').forEach(bar => {
-        bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
-        bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
-      });
+// Play, pause, mute/unmute buttons: single color
+document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
+  btn.style.background = darker2;
+  btn.style.boxShadow = `0 2px 8px ${darker1}`;
+  btn.style.color = luminance < 0.6 ? "#222" : "#fff";
+});
 
-      document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
-        btn.style.background = darker2;
-        btn.style.boxShadow = `0 2px 8px ${darker1}`;
-        btn.style.color = luminance < 0.6 ? "#222" : "#fff";
-      });
-
-      const slider = document.getElementById('volume-slider');
-      if (slider) {
-        slider.style.accentColor = darker2;
-      }
+// Volume slider bar: single color (accent)
+const slider = document.getElementById('volume-slider');
+if (slider) {
+  slider.style.accentColor = darker2;
+}
 
     } catch (e) {
       resetDynamicColors();
@@ -1064,7 +1043,7 @@ function resetDynamicColors() {
   });
 }
 
-  
+
 
 </script>
 

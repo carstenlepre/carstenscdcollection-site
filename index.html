@@ -394,12 +394,6 @@
   </div>
 
   <ul class="recently-played-list"></ul>
-<iframe 
-  width="450" 
-  height="316" 
-  frameborder="0" 
-  src="https://live365.com/embeds/v1/recently_played/a20697?s=md&m=dark&c=mp3">
-</iframe>
 
 <div class="support-buttons">
   <div>
@@ -650,8 +644,6 @@ if (bestMatch) {
   async function updateMetadata(data) {
     const rawTitle = data.nowPlaying || '';
 
-    if (!rawTitle || rawTitle.toLowerCase() === 'no track info') {
-      const offlineMsg = "The station is not live right now! Check @carstenscdradio on Instagram for updates and scheduling.";
       nowPlayingElems.forEach(el => el.textContent = offlineMsg);
       if (coverArtListen) coverArtListen.style.opacity = 0;
       if (coverArtHome) coverArtHome.style.opacity = 0;
@@ -947,12 +939,6 @@ document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, 
 
 document.querySelectorAll('.now-playing-title').forEach(el => {
   el.style.textShadow = "none";
-});
-
-document.querySelectorAll('.recently-played-list').forEach(list => {
-  list.style.background = `linear-gradient(90deg, ${lighter1}, ${lighter2})`;
-  list.style.color = luminance > 0.6 ? "#222" : "#fff";
-  list.style.boxShadow = `0 2px 8px ${darker2}`;
 });
 
 // Nav buttons: strong contrast

@@ -1,1028 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carsten's CD Collection</title>
-<!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6JVTD474KV"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carsten's CD Collection Radio</title>
 
-    gtag('config', 'G-6JVTD474KV');
-  </script>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Carsten's CD Collection Radio</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Bluu+2:wght@700&display=swap');
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-  body {
-    margin: 0;
-    font-family: 'Bluu 2', 'Poppins', sans-serif;
-    background: linear-gradient(135deg, #496972, #b07ea6);
-    color: #eee;
-    text-align: center;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    padding: 2rem 1rem;
-    overflow-x: hidden;
-  }
-
-  #logo {
-    max-width: 180px;
-    margin: 0 auto 1rem auto;
-    filter: drop-shadow(3px 3px 6px rgba(0,0,0,0.9));
-    user-select: none;
-  }
-
-  h1 {
-    font-weight: 700;
-    font-size: 3rem;
-    margin: 0.2em 0 0.1em 0;
-    letter-spacing: 0.06em;
-    user-select: none;
-    text-shadow: 3px 3px 5px rgba(0,0,0,0.7);
-  }
-
-  #slogan {
-    font-weight: 500;
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    color: #d6c1d9;
-    user-select: none;
-  }
-
-  nav {
-    margin-bottom: 2rem;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 0.6rem; /* space between buttons */
-  }
-
-  .nav-btn {
-    background: linear-gradient(45deg, #8e7db4, #b07ea6);
-    border: none;
-    color: #eee;
-    font-weight: 700;
-    padding: 0.4rem 1.1rem;
-    border-radius: 14px;
-    cursor: pointer;
-    box-shadow: 0 0 6px #b07ea6;
-    transition: all 0.3s ease;
-    user-select: none;
-    font-size: 1rem;
-    letter-spacing: 1.2px;
-    white-space: nowrap; /* prevent text wrap inside button */
-  }
-  .nav-btn:hover, .nav-btn:focus {
-    box-shadow:
-      0 0 8px #d3a7e0,
-      0 0 20px #b07ea6,
-      0 0 28px #d3a7e0,
-      0 0 40px #b07ea6;
-    transform: scale(1.1);
-    outline: none;
-  }
-
-  #content {
-    flex-grow: 1;
-    max-width: 440px;
-    margin: 0 auto;
-    text-align: left;
-    color: #dce6eb;
-  }
-
-  section {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-  section.active {
-    display: block;
-    opacity: 1;
-  }
-
-  /* Home */
-  #home .now-playing-title,
-  #listen .now-playing-title {
-    font-size: 1.3rem;
-    margin-bottom: 0.6rem;
-    color: #dbe9f4;
-    text-shadow: 1.5px 1.5px 3px #204040;
-    user-select: none;
-  }
-  #home .recently-played-list,
-  #listen .recently-played-list {
-    font-size: 0.9rem;
-    background: rgba(0,0,0,0.15);
-    border-radius: 8px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.6);
-    padding: 0.4rem 1rem;
-    max-height: 8rem;
-    overflow-y: auto;
-    list-style: none;
-    user-select: none;
-  }
-  .recently-played-list li {
-    padding: 0.25em 0;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-  }
-  .recently-played-list li:last-child {
-    border-bottom: none;
-  }
-  /* Center cover art on home page */
-  #home #home-cover-art {
-    width: 140px;
-    height: 140px;
-    border-radius: 12px;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.7);
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    margin-bottom: 1rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* Listen Now */
-  #listen audio {
-    width: 100%;
-    border-radius: 14px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.7), inset 0 0 15px rgba(73,105,114,0.6);
-    margin-bottom: 1.2rem;
-  }
-  #listen #listen-cover-art {
-    width: 280px;
-    height: 280px;
-    border-radius: 16px;
-    box-shadow: 0 8px 26px rgba(0,0,0,0.85);
-    object-fit: cover;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    margin-bottom: 1.2rem;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  #listen .recently-played-list {
-    max-height: 9rem;
-  }
-  #listen .now-playing-title {
-    font-size: 1.7rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    text-align: center;
-    letter-spacing: 0.03em;
-  }
-
-  /* Request/Call */
-  #requests h2,
-  #about h2 {
-    font-size: 2rem;
-    color: #e4d7f5;
-    text-shadow: 0 0 8px #856b9d;
-    margin-bottom: 1rem;
-  }
-  #requests p, #about p {
-    line-height: 1.5;
-    margin-bottom: 1rem;
-    color: #dcdde1;
-  }
-  #requests a, #about a {
-    color: #a1cee8;
-    font-weight: 600;
-    text-decoration: none;
-  }
-  #requests a:hover, #about a:hover {
-    text-decoration: underline;
-  }
-  #requests .note {
-    font-size: 0.85rem;
-    font-style: italic;
-    color: #c8c8c8;
-    margin-top: 0.6rem;
-    max-width: 400px;
-  }
-
-  /* Responsive */
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 2.2rem;
-    }
-    #listen #listen-cover-art {
-      width: 220px;
-      height: 220px;
-    }
-    #home #home-cover-art {
-      width: 110px;
-      height: 110px;
-    }
-    .nav-btn {
-      font-size: 0.9rem;
-      padding: 0.4rem 1rem;
+  <style>
+    /* Background Gradient Animation */
+    body {
       margin: 0;
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      background: linear-gradient(270deg, #6a11cb, #ff4b2b, #fcb045, #6a11cb);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    nav {
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    /* Header & Navigation */
+    header {
+      text-align: center;
+      padding: 25px 15px 15px 15px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    header img {
+      max-width: 160px;
+      height: auto;
+      display: block;
+      margin: 0 auto 10px auto;
+      filter: drop-shadow(0 0 8px #fff);
+    }
+    header h1 {
+      margin: 5px 0;
+      font-size: 32px;
+      font-weight: 700;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.5);
+    }
+    header p.slogan {
+      margin: 5px 0 15px 0;
+      font-size: 16px;
+      font-weight: 500;
+      color: #ffd;
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+    }
+    .nav-buttons {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      gap: 0.4rem;
-      overflow-x: visible;
-      flex-wrap: wrap; /* allow buttons to wrap */
+      gap: 15px;
+      margin-top: 10px;
     }
-  }
+    .nav-buttons button {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 12px 25px;
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .nav-buttons button:hover {
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 15px #fff, 0 0 25px rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
 
-  .custom-media-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.2rem;
-  background: linear-gradient(90deg, #8e7db4 60%, #b07ea6 100%);
-  border-radius: 16px;
-  box-shadow: 0 4px 18px rgba(73,105,114,0.25);
-  padding: 0.7rem 1.5rem;
-  margin-bottom: 1.2rem;
-}
+    /* Sections */
+    section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 0 8px rgba(255,255,255,0.05);
+      backdrop-filter: blur(4px);
+      transition: all 0.3s ease;
+    }
+    section:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 0 12px rgba(255,255,255,0.08);
+    }
+    h2 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 28px;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 8px rgba(0,0,0,0.5);
+    }
+    a {
+      color: #ffd;
+      text-decoration: underline;
+      transition: all 0.2s ease;
+    }
+    a:hover {
+      color: #fff;
+      text-shadow: 0 0 8px #fff;
+    }
 
-.custom-media-bar button {
-  background: #6a5a99;
-  color: #fff;
-  border: none;
-  border-radius: 50%;
-  width: 2.6rem;
-  height: 2.6rem;
-  font-size: 1.3rem;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  box-shadow: 0 2px 8px #b07ea6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.custom-media-bar button:hover {
-  background: #b07ea6;
-  transform: scale(1.1);
-}
+    /* Listen Section Layout */
+    .player-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
 
-#volume-slider {
-  width: 110px;
-  accent-color: #d3a7e0;
-  background: transparent;
-  cursor: pointer;
-}
+    /* Footer */
+    footer {
+      margin-top: auto;
+      background: rgba(0,0,0,0.5);
+      padding: 25px 15px;
+      text-align: center;
+      box-shadow: inset 0 2px 10px rgba(255,255,255,0.05);
+    }
+    .footer-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .footer-buttons a {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    .footer-buttons a:hover {
+      background: rgba(255,255,255,0.25);
+      box-shadow: 0 0 15px #fff, 0 0 25px rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
 
-#about h2,
-#requests h2 {
-  text-shadow: none !important;
-}
+    /* Responsive */
+    @media(max-width: 500px) {
+      iframe {
+        width: 100%;
+        height: auto;
+      }
+      .nav-buttons button, .footer-buttons a {
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+      section {
+        padding: 20px;
+      }
+      header h1 {
+        font-size: 24px;
+      }
+      header p.slogan {
+        font-size: 14px;
+      }
+    }
+  </style>
 
-/* .custom-media-bar button#volume-icon {
-  margin-left: -2px;
-} */
-
-
-</style>
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+  </script>
 </head>
 <body>
+  <header>
+    <img src="https://i.imgur.com/VzBkTa5.png" alt="Carsten's CD Collection Radio Logo">
+    <h1>Carsten's CD Collection</h1>
+    <p class="slogan">Streaming hand-picked tracks from a vast CD library – live commentary included.</p>
+    <div class="nav-buttons">
+      <button onclick="scrollToSection('listen')">Home</button>
+      <button onclick="scrollToSection('request')">Request/Call</button>
+      <button onclick="scrollToSection('schedule')">Schedule</button>
+      <button onclick="scrollToSection('about')">About</button>
+    </div>
+  </header>
 
-  <img id="logo" src="https://i.imgur.com/VzBkTa5.png" alt="Carsten's CD Collection Logo" />
-  <h1>Carsten's CD Collection Radio</h1>
-  <div id="slogan">Streaming hand-picked tracks from a vast CD library – live commentary included</div>
+  <!-- LISTEN NOW / HOME -->
+  <section id="listen">
+    <h2>Listen Live</h2>
+    <div class="player-container">
+      <!-- Live365 Player -->
+      <iframe width="450" height="316" frameborder="0" 
+        src="https://live365.com/embeds/v1/player/a20697?s=md&m=dark&c=mp3">
+      </iframe>
 
-  <nav>
-    <button class="nav-btn" data-target="home">Home</button>
-    <button class="nav-btn" data-target="listen">Listen Now</button>
-    <button class="nav-btn" data-target="requests">Request/Call</button>
-    <button class="nav-btn" data-target="about">About</button>
-    <button class="nav-btn" data-target="schedule">Schedule</button>
-  </nav>
+      <!-- Recently Played -->
+      <iframe width="450" height="511" frameborder="0" 
+        src="https://live365.com/embeds/v1/played/a20697?s=md&m=dark">
+      </iframe>
+    </div>
+  </section>
 
-  <main id="content">
-    <section id="home" class="active" aria-label="Home section">
-      <img id="home-cover-art" alt="Album cover art" crossOrigin="anonymous" />
-      <div class="now-playing-title">Loading now playing...</div>
-      <ul class="recently-played-list"></ul>
+  <!-- REQUEST/CALL SECTION -->
+  <section id="request">
+    <h2>Request / Call</h2>
+    <p>Send in your requests or song submissions below!</p>
+    <p>📞 <strong>Call or text:</strong> (908) 605-0391 — request songs or chat on air!</p>
+    <p><strong>Email:</strong> carstenscdcollection@gmail.com</p>
+    <p><strong>Instagram:</strong> <a href="https://instagram.com/carstenscdradio" target="_blank">@carstenscdradio</a></p>
+    <p>Besides requests for your favorite songs, I also accept original song submissions! Email or DM the file for airtime.</p>
+    <p><em>*Please note that my library of songs is based on my actual CD collection—I might not have what you request.*</em></p>
+  </section>
 
-      <style>
-  .support-buttons {
-    text-align: center;
-    margin-top: 2em;
-    display: flex;
-    justify-content: center;
-    gap: 1.5em;
-    align-items: center;
-  }
-  .support-buttons div {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .support-buttons p {
-    margin: 0 0 0.3em;
-    font-weight: 600;
-    font-family: Arial, sans-serif;
-    font-size: 0.9rem;
-  }
-  .support-buttons a img {
-    height: 31.5px; /* 45px * 0.7 = 31.5px */
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  .support-buttons a:hover img {
-    transform: scale(1.1);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  }
-</style>
-
-<div class="support-buttons">
-  <div>
-    <p>Help keep the station up and running :)</p>
-    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
-      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-black.png" alt="Buy Me A Coffee">
-    </a>
-  </div>
-  <div>
-    <p>Join our Discord community!</p>
-    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-    </a>
-  </div>
-</div>
-    </section>
-
-    <section id="listen" aria-label="Listen Now section">
-<iframe 
-  width="450" 
-  height="316" 
-  frameborder="0" 
-  src="https://live365.com/embeds/v1/player/a20697?s=md&m=dark&c=mp3">
-</iframe>
-
-  <div class="custom-media-bar">
-  <button id="play-btn" aria-label="Play">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <circle cx="14" cy="14" r="14" fill="#222"/>
-      <polygon points="11,8 22,14 11,20" fill="#fff"/>
-    </svg>
-  </button>
-  <button id="pause-btn" aria-label="Pause" style="display:none;">
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-      <circle cx="14" cy="14" r="14" fill="#222"/>
-      <rect x="10" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
-      <rect x="15" y="8" width="3" height="12" rx="1.5" fill="#fff"/>
-    </svg>
-  </button>
-  <button id="volume-icon" aria-label="Mute/Unmute" type="button">
-  <svg id="volume-svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-    <circle cx="14" cy="14" r="14" fill="#222"/>
-    <polygon id="volume-body" points="5,12 9,12 13,8 13,20 9,16 5,16" fill="#fff"/>
-    <g id="volume-waves"></g>
-  </svg>
-</button>
-  <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="1" aria-label="Volume" />
-</div>
-
-  <img id="listen-cover-art" alt="Album cover art" crossOrigin="anonymous" />
-
-  <div class="now-playing-title">
-    Loading now playing...
-  </div>
-
-  <ul class="recently-played-list"></ul>
-
-<div class="support-buttons">
-  <div>
-    <p>Help keep the station up and running :)</p>
-    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
-      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-black.png" alt="Buy Me A Coffee">
-    </a>
-  </div>
-  <div>
-    <p>Join our Discord community!</p>
-    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-    </a>
-  </div>
-</div>
-</section>
-
-    <section id="requests" aria-label="Requests and Call section">
-      <h2>Send in your requests or song submissions below!</h2>
-      <p>📞 Call or text: <strong>(908) 605-0391</strong> — request songs or chat on air!</p>
-      <p>Email: <a href="mailto:carstenscdcollection@gmail.com">carstenscdcollection@gmail.com</a></p>
-      <p>Instagram: <a href="https://instagram.com/carstenscdradio" target="_blank" rel="noopener">@carstenscdradio</a></p>
-      <p>Besides requests for your favorite songs, I also accept original song submissions! Email or DM the file for airtime.</p>
-      <p class="note">*Please note that my library of songs is based on my actual CD collection—I might not have what you request.*</p>
-
-      <style>
-  .support-buttons {
-    text-align: center;
-    margin-top: 2em;
-    display: flex;
-    justify-content: center;
-    gap: 1.5em;
-    align-items: center;
-  }
-  .support-buttons div {
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .support-buttons p {
-    margin: 0 0 0.3em;
-    font-weight: 600;
-    font-family: Arial, sans-serif;
-    font-size: 0.9rem;
-  }
-  .support-buttons a img {
-    height: 31.5px; /* 45px * 0.7 = 31.5px */
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  .support-buttons a:hover img {
-    transform: scale(1.1);
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-  }
-</style>
-
-<div class="support-buttons">
-  <div>
-    <p>Help keep the station up and running :)</p>
-    <a href="https://buymeacoffee.com/carstenscdradio" target="_blank" rel="noopener noreferrer">
-      <img src="https://cdn.buymeacoffee.com/buttons/v2/default-black.png" alt="Buy Me A Coffee">
-    </a>
-  </div>
-  <div>
-    <p>Join our Discord community!</p>
-    <a href="https://discord.gg/fRerEHAFTH" target="_blank" rel="noopener noreferrer" style="display: inline-block;">
-      <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" alt="Discord">
-    </a>
-  </div>
-</div>
-
-    </section>
-
-    <section id="about" aria-label="About section">
-      <h2>About Carsten's CD Collection Radio</h2>
-      <p>Hello! My name is Carsten Lepre, and I am a 16 year old music lover and CD collector. Carsten’s CD Collection Radio is my project to deliver my favorite songs directly to the listener, while honing my love for podcasting with live commentary and deep dives.</p>
-      <p>My music taste is eclectic, because when your main source of listening is thrifted/record store bought CDs, you never know what you’ll pick up. However, you’ll hear a lot of John Mayer, Coldplay, Beatles, Tame Impala, Jack Johnson, and so much more. The best part about music straight from a vast CD collection is that it’s incredibly diverse!</p>
-      <p>Stick with me for fun segments like full album listen-throughs or a focus on one specific artist for a few songs with intermittent commentary and anecdotes.</p>
-      <p>For scheduling, you’ll find the dates and times that the station is live on the station’s Instagram page: <a href="https://instagram.com/carstenscdradio" target="_blank" rel="noopener">@carstenscdradio</a>, but you can also follow my main page <a href="https://instagram.com/carstenlepre8" target="_blank" rel="noopener">@carstenlepre8</a>.</p>
-      <p>Visit the Request/Call page on the website for info about submitting your own original music or sending in your favorite song requests. There you will find various methods to reach me/the station. Hope you enjoy!</p>
-    </section>
-
-    <section id="schedule" aria-label="Schedule section" style="display:none; opacity:0; transition: opacity 0.3s ease;">
-  <h2 style="
-    font-size: 2.5rem; 
-    color: #e4d7f5; 
-    margin-bottom: 1rem; 
-    text-align: center;
-  ">
-    Summer Schedule
-  </h2>
-
-  <div style="text-align: center; margin-bottom: 2rem; font-size: 1.2rem; color: #dcdde1; line-height: 1.6;">
+  <!-- SCHEDULE SECTION -->
+  <section id="schedule">
+    <h2>Summer Schedule</h2>
     <p><strong>Tuesdays</strong><br>7–10pm EST</p>
     <p><strong>Thursdays</strong><br>7–10pm EST</p>
     <p><strong>Saturdays</strong><br>7–10pm EST</p>
-  </div>
 
-  <h2 style="
-    font-size: 2rem; 
-    color: #e4d7f5; 
-    margin-bottom: 1rem; 
-    text-align: center;
-  ">
-    Events
-  </h2>
-
-  <p style="text-align: center; font-size: 1.1rem; color: #dcdde1; margin-bottom: 2rem;">
-    <strong>First Ever 70s/80s Night!</strong><br>
-    Saturday, August 23rd from 7:30-10:30 EST
-  </p>
-
-  <p class="note" style="text-align: center; font-size: 0.85rem; font-style: italic; color: #c8c8c8; margin-top: 2rem;">
-    *The schedule you see above is the Summer schedule. In September, the fall schedule will debut different dates*
-  </p>
-</section>
-  </main>
-
-<script>
-  // Page navigation with fade
-  const buttons = document.querySelectorAll('nav .nav-btn');
-  const sections = document.querySelectorAll('main > section');
-
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const target = btn.getAttribute('data-target');
-      sections.forEach(sec => {
-        if (sec.id === target) {
-          sec.classList.add('active');
-          sec.style.display = 'block';
-          setTimeout(() => sec.style.opacity = '1', 10);
-        } else {
-          sec.style.opacity = '0';
-          setTimeout(() => sec.classList.remove('active'), 300);
-          setTimeout(() => sec.style.display = 'none', 300);
-        }
-      });
-    });
-  });
-
-  // Elements for metadata updates
-  const nowPlayingElems = document.querySelectorAll('.now-playing-title');
-  const recentlyPlayedULs = document.querySelectorAll('.recently-played-list');
-  const coverArtListen = document.getElementById('listen-cover-art');
-  const coverArtHome = document.getElementById('home-cover-art');
-
-  let recentTracks = [];
-  let lastTrack = '';
-  let updateTimeout;
-
-  function cleanTrackTitle(title) {
-    return title.replace(/\s*\(.*?\)|\s*\[.*?\]/g, '').trim();
-  }
-
-
-
-async function fetchCoverArt(track, artist) {
-    const cleanTitle = cleanTrackTitle(track);
-    let searchTerm = cleanTitle;
-
-    // Add artist and/or album to the search term if available
-    if (artist) {
-        searchTerm += ` ${artist}`;
-    }
-    else {
-        searchTerm += ' wigwamcenter';
-    }
-
-    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&entity=song&limit=10`;  // Fetch multiple results
-
-    try {
-        const res = await fetch(url);
-        const json = await res.json();
-
-        if (json.resultCount > 0) {
-            // Try to find the exact match based on title and artist
-            const normalize = str =>
-  cleanTrackTitle(str)
-    .toLowerCase()
-    .replace(/[^\w\s]/g, '') // remove punctuation
-    .replace(/\s+/g, ' ')    // normalize spacing
-    .trim();
-
-const normalizedSearchTitle = normalize(track);
-const normalizedSearchArtist = artist ? artist.toLowerCase() : null;
-
-let bestMatch = null;
-let bestScore = 0;
-
-console.log(`🎯 [CoverArt] Matching "${normalizedSearchTitle}" ${normalizedSearchArtist ? `by "${normalizedSearchArtist}"` : ''}`);
-console.log(`📊 [CoverArt] Evaluating ${json.results.length} results:`);
-
-json.results.forEach((result, index) => {
-  const resultTitle = normalize(result.trackName);
-  const resultArtist = result.artistName.toLowerCase();
-
-let score = 0;
-
-// Prioritize good title match
-if (resultTitle === normalizedSearchTitle) {
-  score += 5;
-} else if (resultTitle.includes(normalizedSearchTitle) || normalizedSearchTitle.includes(resultTitle)) {
-  score += 3;
-}
-
-// Prefer correct artist
-if (normalizedSearchArtist && resultArtist.includes(normalizedSearchArtist)) {
-  score += 2;
-}
-
-// Penalize albums with junk keywords
-const badAlbumKeywords = [
-  'greatest hits', 'deluxe', 'remaster', 'tribute',
-  'karaoke', 'single', 'soundtrack', 'voice performance', 'best of', 'compilation', 'live',
-];
-const albumName = result.collectionName.toLowerCase();
-if (badAlbumKeywords.some(keyword => albumName.includes(keyword))) {
-  score -= 2;
-}
-
-  //console.log(`  [${index + 1}] "${result.trackName}" by "${result.artistName}"`);
-  //console.log(`       → Normalized title: "${resultTitle}"`);
-  //console.log(`       → Normalized artist: "${resultArtist}"`);
-  //console.log(`       → Match score: ${score}`);
-
-  if (score > bestScore) {
-    bestScore = score;
-    bestMatch = result;
-  }
-});
-
-if (bestMatch) {
-  //console.log(`✅ [CoverArt] Selected: "${bestMatch.trackName}" by "${bestMatch.artistName}" (score: ${bestScore})`);
-  return bestMatch.artworkUrl100.replace('100x100bb.jpg', '300x300bb.jpg');
-}
-
-            // If no exact match, return a generic image
-            return 'https://i.imgur.com/SKEYAYe.png';  // Generic placeholder image
-        }
-
-        return 'https://i.imgur.com/SKEYAYe.png';  // Generic placeholder image if no results
-    } catch (e) {
-        console.warn('Cover art fetch failed:', e);
-        return 'https://i.imgur.com/SKEYAYe.png';  // Return generic image on error
-    }
-}
-
-  async function updateMetadata(data) {
-    const rawTitle = data.nowPlaying || '';
-
-      nowPlayingElems.forEach(el => el.textContent = offlineMsg);
-      if (coverArtListen) coverArtListen.style.opacity = 0;
-      if (coverArtHome) coverArtHome.style.opacity = 0;
-      recentlyPlayedULs.forEach(ul => ul.innerHTML = '');
-      return;
-    }
-
-    if (rawTitle === lastTrack) return;
-    let firstLoad = lastTrack === '';
-    lastTrack = rawTitle;
-
-    let artist = null;
-    let title = rawTitle;
-    if (rawTitle.includes(' - ')) {
-      [artist, title] = rawTitle.split(' - ').map(s => s.trim());
-    }
-
-    const nowPlayingStr = `Now Playing: ${artist} — ${title}`;
-
-    if (!recentTracks.includes(rawTitle)) {
-      recentTracks.unshift(rawTitle);
-      if (recentTracks.length > 5) recentTracks.pop();
-    }
-
-    nowPlayingElems.forEach(el => el.textContent = nowPlayingStr);
-
-    recentlyPlayedULs.forEach(ul => {
-      ul.innerHTML = '';
-      recentTracks.forEach(track => {
-        const li = document.createElement('li');
-        li.textContent = track;
-        ul.appendChild(li);
-      });
-    });
-
-    const coverUrl = await fetchCoverArt(title, artist);
-    if (coverUrl) {
-      if (firstLoad) {
-        if (coverArtListen) {
-          coverArtListen.src = coverUrl;
-          coverArtListen.style.opacity = '1';
-          coverArtListen.onload = function() {
-            setBackgroundFromCover(coverArtListen);
-          };
-        }
-        if (coverArtHome) {
-          coverArtHome.src = coverUrl;
-          coverArtHome.style.opacity = '1';
-        }
-      }
-      if (updateTimeout) clearTimeout(updateTimeout);
-      updateTimeout = setTimeout(() => {
-        if (coverArtListen) {
-          coverArtListen.src = coverUrl;
-          coverArtListen.style.opacity = '1';
-          coverArtListen.onload = function() {
-            setBackgroundFromCover(coverArtListen);
-          };
-        }
-        if (coverArtHome) {
-          coverArtHome.src = coverUrl;
-          coverArtHome.style.opacity = '1';
-        }
-      }, 0); // 0 second delay for future updates
-    } else {
-      if (coverArtListen) coverArtListen.style.opacity = 0;
-      if (coverArtHome) coverArtHome.style.opacity = 0;
-    }
-  }
-
-  async function fetchMetadata() {
-    try {
-      const res = await fetch('https://metadata-proxy-git-main-carsten-lepres-projects.vercel.app/api/metadata');
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-
-      const data = await res.json();
-      await updateMetadata(data);
-    } catch (error) {
-      const offlineMsg = "The station is not live right now! Check @carstenscdradio on Instagram for updates and scheduling.";
-      nowPlayingElems.forEach(el => el.textContent = offlineMsg);
-      if (coverArtListen) coverArtListen.style.opacity = 0;
-      if (coverArtHome) coverArtHome.style.opacity = 0;
-      recentlyPlayedULs.forEach(ul => ul.innerHTML = '');
-      console.error('Fetch metadata error:', error);
-    }
-  }
-
-  fetchMetadata();
-  setInterval(fetchMetadata, 15000);
-
-  const audio = document.getElementById('audio-player');
-const playBtn = document.getElementById('play-btn');
-const pauseBtn = document.getElementById('pause-btn');
-const volumeSlider = document.getElementById('volume-slider');
-
-// Play
-let volumeEnabled = false;
-playBtn.addEventListener('click', () => {
-  audio.play();
-  volumeEnabled = true;
-  playBtn.style.display = 'none';
-  pauseBtn.style.display = 'inline-flex';
-});
-
-// Pause
-pauseBtn.addEventListener('click', () => {
-  audio.pause();
-  pauseBtn.style.display = 'none';
-  playBtn.style.display = 'inline-flex';
-});
-
-// Volume
-volumeSlider.addEventListener('input', () => {
-  if (volumeEnabled) {
-    audio.volume = volumeSlider.value;
-  }
-});
-
-// Update play/pause button on audio events
-audio.addEventListener('play', () => {
-  playBtn.style.display = 'none';
-  pauseBtn.style.display = 'inline-flex';
-});
-audio.addEventListener('pause', () => {
-  pauseBtn.style.display = 'none';
-  playBtn.style.display = 'inline-flex';
-});
-
-// Optional: Start playing automatically
-audio.volume = volumeSlider.value;
-audio.autoplay = true;
-
-const volumeIcon = document.getElementById('volume-icon');
-const volumeSVG = document.getElementById('volume-svg');
-const volumeWavesGroup = document.getElementById('volume-waves');
-
-function updateVolumeIcon() {
-  // Clear previous waves
-  volumeWavesGroup.innerHTML = '';
-
-  if (audio.paused || audio.volume === 0) {
-    // Draw an "X" for muted (shifted left by 10)
-    volumeWavesGroup.innerHTML = `
-      <line x1="16" y1="10" x2="22" y2="18" stroke="#fff" stroke-width="2"/>
-      <line x1="22" y1="10" x2="16" y2="18" stroke="#fff" stroke-width="2"/>
-    `;
-  } else if (audio.volume > 0 && audio.volume <= 0.33) {
-    // One wave (shrunk by half)
-    volumeWavesGroup.innerHTML = `
-      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-    `;
-  } else if (audio.volume > 0.33 && audio.volume <= 0.66) {
-    // Two waves (shrunk by half)
-    volumeWavesGroup.innerHTML = `
-      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-      <path d="M16.5 10.4 Q22 13.75 16.5 17.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-    `;
-  } else {
-    // Three waves (shrunk by half)
-    volumeWavesGroup.innerHTML = `
-      <path d="M15 16.5 Q18 14 15 11.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-      <path d="M16.5 10.4 Q22 13.75 16.5 17.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-      <path d="M19.5 9.5 Q24.25 13.75 19.5 18.5" stroke="#fff" stroke-width="1.5" fill="none"/>
-    `;
-  }
-}
-
-// Clicking the icon toggles mute/unmute
-volumeIcon.addEventListener('click', () => {
-  if (audio.volume > 0) {
-    audio.volume = 0;
-    volumeSlider.value = 0;
-  } else {
-    audio.volume = 1;
-    volumeSlider.value = 1;
-  }
-  updateVolumeIcon();
-});
-
-// Update icon on play/pause/volume change
-audio.addEventListener('play', updateVolumeIcon);
-audio.addEventListener('pause', updateVolumeIcon);
-volumeSlider.addEventListener('input', updateVolumeIcon);
-audio.addEventListener('volumechange', updateVolumeIcon);
-
-// Initial state
-updateVolumeIcon();
-
-// Helper to convert [r,g,b] to hex
-function rgbToHex(rgb) {
-  return "#" + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
-}
-
-// Store your default background
-const defaultBackground = "linear-gradient(135deg, #496972, #b07ea6)";
-
-function getLuminance(hex) {
-  // Remove "#" if present
-  hex = hex.replace(/^#/, '');
-  // Parse r, g, b
-  let r = parseInt(hex.substr(0,2),16) / 255;
-  let g = parseInt(hex.substr(2,2),16) / 255;
-  let b = parseInt(hex.substr(4,2),16) / 255;
-  // Standard luminance formula
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-
-// This function sets the background based on the album art
-function lightenDarkenColor(hex, amt) {
-  // amt: positive to lighten, negative to darken
-  let usePound = false;
-  if (hex[0] === "#") {
-    hex = hex.slice(1);
-    usePound = true;
-  }
-  let num = parseInt(hex,16);
-  let r = (num >> 16) + amt;
-  let g = ((num >> 8) & 0x00FF) + amt;
-  let b = (num & 0x0000FF) + amt;
-  r = Math.max(Math.min(255, r), 0);
-  g = Math.max(Math.min(255, g), 0);
-  b = Math.max(Math.min(255, b), 0);
-  return (usePound ? "#" : "") + (r << 16 | g << 8 | b).toString(16).padStart(6, '0');
-}
-
-function setBackgroundFromCover(img) {
-  const colorThief = new ColorThief();
-
-  if (img.complete && img.naturalHeight !== 0 && !img.src.includes('SKEYAYe.png')) {
-    try {
-      const dominant = colorThief.getColor(img);
-      const palette = colorThief.getPalette(img, 3);
-
-      const color1 = rgbToHex(dominant);
-      const color2 = rgbToHex(palette[1] || dominant);
-      const color3 = rgbToHex(palette[2] || dominant);
-
-      // Calculate luminance of dominant color
-      const luminance = getLuminance(color1);
-
-      // If background is dark, buttons are lighter; if light, buttons are darker
-      const contrastAmt = 100;
-      let lighter1, lighter2, darker1, darker2;
-      if (luminance < 0.75) {
-        lighter1 = lightenDarkenColor(color1, contrastAmt);
-        lighter2 = lightenDarkenColor(color2, contrastAmt);
-        darker1 = lightenDarkenColor(color1, contrastAmt);
-        darker2 = lightenDarkenColor(color2, contrastAmt);
-      } else {
-        lighter1 = lightenDarkenColor(color1, -contrastAmt);
-        lighter2 = lightenDarkenColor(color2, -contrastAmt);
-        darker1 = lightenDarkenColor(color1, -contrastAmt);
-        darker2 = lightenDarkenColor(color2, -contrastAmt);
-      }
-
-      // Set all text to white/black except the title
-      const textColor = luminance > 0.75 ? "#222" : "#fff";
-      //const textShadow = luminance < 0.6
-      //  ? "0 1px 3px #a1cee8, 0 0px 1px #a1cee8"
-      //   : "0 1px 3px #a1cee8, 0 0px 1px #a1cee8";
-
-      document.querySelectorAll('body *:not(h1)').forEach(el => {
-if (
-    !el.classList.contains('nav-btn') &&
-    !el.closest('.custom-media-bar')
-  ) {
-    el.style.color = textColor;
-    el.style.fontWeight = "bold";
-  }
-});
-
-const h1 = document.querySelector('h1');
-if (h1) {
-  h1.style.color = textColor;
-  if (textColor === '#222') {
-    // Dark text — use light shadow for contrast
-    h1.style.textShadow = `
-      0 1px 2px rgba(255, 255, 255, 0.6),
-      0 2px 6px rgba(255, 255, 255, 0.3)
-    `;
-  } else {
-    // Light text — keep dark shadow
-    h1.style.textShadow = `
-      0 2px 4px rgba(0, 0, 0, 0.75),
-      0 4px 10px rgba(0, 0, 0, 0.5),
-      2px 2px 6px rgba(0, 0, 0, 0.3)
-    `;
-  }
-  h1.style.transition = "all 0.3s ease-in-out";
-}
-      // Set background
-document.body.style.background = `linear-gradient(135deg, ${color1}, ${color2}, ${color3})`;
-
-document.querySelectorAll('.now-playing-title').forEach(el => {
-  el.style.textShadow = "none";
-});
-
-// Nav buttons: strong contrast
-document.querySelectorAll('.nav-btn').forEach(btn => {
-  btn.style.background = `linear-gradient(45deg, ${lighter1}, ${lighter2})`;
-  btn.style.boxShadow = `0 0 6px ${darker2}`;
-  btn.style.color = luminance < 0.6 ? "#222" : "#fff";
-});
-
-// Media bar: strong contrast
-document.querySelectorAll('.custom-media-bar').forEach(bar => {
-  bar.style.background = `linear-gradient(90deg, ${darker1} 60%, ${darker2} 100%)`;
-  bar.style.boxShadow = `0 4px 18px ${darker1}cc`;
-});
-
-// Play, pause, mute/unmute buttons: single color
-document.querySelectorAll('#play-btn, #pause-btn, #volume-icon').forEach(btn => {
-  btn.style.background = darker2;
-  btn.style.boxShadow = `0 2px 8px ${darker1}`;
-  btn.style.color = luminance < 0.6 ? "#222" : "#fff";
-});
-
-// Volume slider bar: single color (accent)
-const slider = document.getElementById('volume-slider');
-if (slider) {
-  slider.style.accentColor = darker2;
-}
-
-    } catch (e) {
-      resetDynamicColors();
-    }
-  } else {
-    resetDynamicColors();
-  }
-}
-
-// Helper to reset dynamic colors to your default scheme
-function resetDynamicColors() {
-  // Body background
-  document.body.style.background = "linear-gradient(135deg, #496972, #b07ea6)";
-  // Reset all text to default except the title
-  document.querySelectorAll('body *:not(h1)').forEach(el => {
-    if (
-      !el.classList.contains('nav-btn') &&
-      !el.closest('.custom-media-bar')
-    ) {
-      el.style.color = "";
-    }
-  });
-  document.querySelectorAll('body *:not(h1)').forEach(el => {
-    if (
-      !el.classList.contains('nav-btn') &&
-      !el.closest('.custom-media-bar')
-    ) {
-      el.style.color = "";
-      el.style.textShadow = "";
-      el.style.fontWeight = "";
-    }
-  });
-
-  // Nav buttons
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.style.background = "linear-gradient(45deg, #8e7db4, #b07ea6)";
-    btn.style.boxShadow = "0 0 6px #b07ea6";
-  });
-
-  // Media bar
-  document.querySelectorAll('.custom-media-bar').forEach(bar => {
-    bar.style.background = "linear-gradient(90deg, #8e7db4 60%, #b07ea6 100%)";
-    bar.style.boxShadow = "0 4px 18px rgba(73,105,114,0.25)";
-  });
-
-  // Media bar buttons
-  document.querySelectorAll('.custom-media-bar button').forEach(btn => {
-    btn.style.background = "#6a5a99";
-    btn.style.boxShadow = "0 2px 8px #b07ea6";
-  });
-}
-
-
-
-</script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
-
+    <h3>Events</h3>
+    <p><strong>First Ever 70s/80s Night!</strong><br>
+    Saturday, August 23rd from 7:30–10:30 EST</p>
+
+    <p><em>*The schedule you see above is the Summer schedule. In September, the fall schedule will debut different dates*</em></p>
+  </section>
+
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <h2>About Carsten's CD Collection Radio</h2>
+    <p>Hello! My name is <strong>Carsten Lepre</strong>, and I am a 16 year old music lover and CD collector. Carsten’s CD Collection Radio is my project to deliver my favorite songs directly to the listener, while honing my love for podcasting with live commentary and deep dives.</p>
+    
+    <p>My music taste is eclectic, because when your main source of listening is thrifted/record store bought CDs, you never know what you’ll pick up. However, you’ll hear a lot of <em>John Mayer, Coldplay, Beatles, Tame Impala, Jack Johnson,</em> and so much more. The best part about music straight from a vast CD collection is that it’s incredibly diverse!</p>
+    
+    <p>Stick with me for fun segments like full album listen-throughs or a focus on one specific artist for a few songs with intermittent commentary and anecdotes.</p>
+    
+    <p>For scheduling, you’ll find the dates and times that the station is live on the station’s Instagram page: <a href="https://instagram.com/carstenscdradio" target="_blank">@carstenscdradio</a>, but you can also follow my main page <a href="https://instagram.com/carstenlepre8" target="_blank">@carstenlepre8</a>.</p>
+    
+    <p>Visit the <strong>Request/Call</strong> section above for info about submitting your own original music or sending in your favorite song requests. Hope you enjoy!</p>
+  </section>
+
+  <!-- FOOTER WITH SUPPORT BUTTONS -->
+  <footer>
+    <div class="footer-buttons">
+      <a href="https://buymeacoffee.com/carstenscdradio" target="_blank">☕ Help keep the station up and running!</a>
+      <a href="https://throne.com/carstenscdradio" target="_blank">💿 Buy me a CD</a>
+      <a href="https://discord.gg/Sng6pMgJ67" target="_blank">💬 Join the community on Discord</a>
+    </div>
+  </footer>
 </body>
 </html>

@@ -73,6 +73,10 @@
       box-shadow: 0 0 15px #fff, 0 0 25px rgba(255,255,255,0.3);
       transform: translateY(-2px);
     }
+    .nav-buttons button.active {
+      background: rgba(255,255,255,0.4);
+      box-shadow: 0 0 15px #fff, 0 0 25px rgba(255,255,255,0.4);
+    }
 
     /* Sections */
     section {
@@ -83,10 +87,11 @@
       border-radius: 16px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3), inset 0 0 8px rgba(255,255,255,0.05);
       backdrop-filter: blur(4px);
-      transition: all 0.3s ease;
+      transition: all 0.5s ease, opacity 0.5s ease;
       display: none;
+      opacity: 0;
     }
-    section.active { display: block; }
+    section.active { display: block; opacity: 1; }
     h2 { text-align: center; font-weight: 700; font-size: 28px; margin-bottom: 20px; text-shadow: 1px 1px 8px rgba(0,0,0,0.5); }
 
     /* Player Container – retro style */
@@ -199,6 +204,9 @@
       sections.forEach(sec => {
         document.getElementById(sec).classList.toggle('active', sec === id);
       });
+      document.querySelectorAll('.nav-buttons button').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(id));
+      });
     }
     window.addEventListener('load', () => { showSection('listen'); });
   </script>
@@ -221,7 +229,8 @@
     </div>
   </header>
 
-  <section id="listen" class="active">
+  <!-- Listen Section -->
+  <section id="listen">
     <h2>Listen Live</h2>
     <div class="player-container">
       <div class="tuner-bar"><div class="tuner-indicator"></div></div>
@@ -229,5 +238,72 @@
       <iframe id="recentlyPlayed" src="https://live365.com/embeds/v1/played/a20697?s=md&m=dark"></iframe>
     </div>
   </section>
+
+  <!-- Request Section -->
+  <section id="request">
+    <h2>Request / Call</h2>
+    <p>Send in your requests or song submissions below!</p>
+    <p>📞 <strong>Call or text:</strong> (908) 605-0391 — request songs or chat on air!</p>
+    <p><strong>Email:</strong> carstenscdcollection@gmail.com</p>
+    <p><strong>Instagram:</strong> <a href="https://instagram.com/carstenscdradio" target="_blank">@carstenscdradio</a></p>
+    <p>Besides requests for your favorite songs, I also accept original song submissions! Email or DM the file for airtime.</p>
+    <p><em>*Please note that my library of songs is based on my actual CD collection—I might not have what you request.*</em></p>
+  </section>
+
+  <!-- Schedule Section -->
+  <section id="schedule">
+    <h2>Fall Schedule</h2>
+    <p><strong>Tuesdays</strong><br>7:00–10:00 pm EST</p>
+    <p><strong>Fridays</strong><br>7:00–10:00 pm EST</p>
+
+    <h3>Events</h3>
+    <p><strong>Coldplay Music of The Spheres Tour Setlist Listen-through</strong><br>Friday, September 26 - 7:30pm</p>
+    <p><em>*Broadcast times subject to change based on station updates. Check Discord station status page for more*</em></p>
+  </section>
+
+  <!-- About Section -->
+  <section id="about">
+    <h2>About Carsten's CD Collection Radio</h2>
+    <p>Hello! My name is <strong>Carsten Lepre</strong>, and I am a 16 year old music lover and CD collector. Carsten’s CD Collection Radio is my project to deliver my favorite songs directly to the listener, while honing my love for podcasting with live commentary and deep dives.</p>
+    <p>My music taste is eclectic, because when your main source of listening is thrifted/record store bought CDs, you never know what you’ll pick up. However, you’ll hear a lot of <em>John Mayer, Coldplay, Beatles, Tame Impala, Jack Johnson</em>, and more.</p>
+    <p>Stick with me for fun segments like full album listen-throughs or a focus on one specific artist for a few songs with intermittent commentary and anecdotes.</p>
+    <p>For scheduling, you’ll find live dates on Instagram: <a href="https://instagram.com/carstenscdradio" target="_blank">@carstenscdradio</a> or <a href="https://instagram.com/carstenlepre8" target="_blank">@carstenlepre8</a>.</p>
+  </section>
+
+  <!-- FAQ Section -->
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p><strong>Q:</strong> Is this playing music 24/7?<br>
+       <strong>A:</strong> No, it’s an exclusive live broadcast that I host the whole time from 7:00–10:30 pm only on Tuesdays and Fridays.</p>
+    <p><strong>Q:</strong> Can I send you CDs?<br>
+       <strong>A:</strong> I don’t have a PO Box opened yet, but you can purchase me a CD on throne at <a href="https://throne.com/carstenscdradio" target="_blank">throne.com/carstenscdradio</a>!</p>
+    <p><strong>Q:</strong> Is this legal?<br>
+       <strong>A:</strong> Yes! I’m fully licensed through Live365.</p>
+    <p><strong>Q:</strong> Is there a community for this?<br>
+       <strong>A:</strong> Yes! Join the Discord at the bottom of the page.</p>
+    <p><strong>Q:</strong> What can I request?<br>
+       <strong>A:</strong> I only accept requests I have on CD to stay true to the theme. There is a Google Sheet pinned in Discord for reference.</p>
+    <p><strong>Q:</strong> When can I call?<br>
+       <strong>A:</strong> I usually accept callers throughout the broadcast, but if I receive your call during a song, I will message you and call back after.</p>
+    <p><strong>Q:</strong> Why did your station randomly go off air?<br>
+       <strong>A:</strong> My WiFi can be unpredictable, but I post updates on Discord with return times.</p>
+    <p><strong>Q:</strong> Can I submit original music?<br>
+       <strong>A:</strong> Of course! Send me an audio file on Instagram (@carstenscdradio) or through email (carstenscdcollection@gmail.com) and I’ll give it a preliminary listen and hopefully have it on in the upcoming days.</p>
+    <p><strong>Q:</strong> How do I start my own radio station?<br>
+       <strong>A:</strong> This is a question that I am willing to explain but it is quite complicated! Email me and I will do my best.</p>
+    <br>
+    <p>Got a business request? Interested in a sponsorship? Email me at carstenscdcollection@gmail.com.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-buttons">
+      <a href="https://buymeacoffee.com/carstenscdradio" target="_blank">☕ Help keep the station up and running!</a>
+      <a href="https://throne.com/carstenscdradio" target="_blank">💿 Buy me a CD</a>
+      <a href="https://discord.gg/Sng6pMgJ67" target="_blank">💬 Join the community on Discord</a>
+      <a href="https://carstenscdradio.creator-spring.com/" target="_blank">🛍 Merch (New!)</a>
+      <a href="https://docs.google.com/spreadsheets/d/1qXMgoSQVA6phpXQWTlHuJGWFIaYcoyQin_bTVxeAL1M/edit?usp=sharing" target="_blank">📀 List of my CDs</a>
+    </div>
+  </footer>
 </body>
 </html>
